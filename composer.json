@@ -1,0 +1,16 @@
+{
+    "name": "lina",
+    "autoload": {
+        "psr-4": {
+            "Controlers\\": "controllers",
+            "Models\\": "models"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lina Vlasiadou",
+            "email": "lv@itrust.gr"
+        }
+    ],
+    "require": {}
+}
