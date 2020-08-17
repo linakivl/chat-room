@@ -2,8 +2,8 @@
     "name": "lina",
     "autoload": {
         "psr-4": {
-            "Controlers\\": "controllers",
-            "Models\\": "models"
+           "Controllers\\": "Controllers",
+           "Models\\": "Models"
         }
     },
     "authors": [

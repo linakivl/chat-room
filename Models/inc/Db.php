@@ -1,6 +1,6 @@
 <?php
 
-    namespace Itrust;
+namespace Models\inc;
 
 class Db {
 
@@ -12,7 +12,7 @@ class Db {
 
         private static $instance = null;
 
-        private static function getInstance(){
+        public static function getInstance(){
             if(!self::$instance){
 
                 self::$instance = new Db();
