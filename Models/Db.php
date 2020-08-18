@@ -1,6 +1,6 @@
 <?php
 
-namespace Models\inc;
+namespace Models;
 
 class Db {
 
