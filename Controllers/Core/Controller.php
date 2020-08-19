@@ -1,46 +1,56 @@
 <?php
 
+//The set() method is going to merge all the data that we want to pass to the view.
+
+//The render() method is going to import the data with the method extract and then 
+//load the layout requested in the Views directory. Moreover, this allows us to have a 
+//layout in order to avoid the stupid repetition of HTML in our views.
     namespace Controllers\Core;
 
     class Controller{
 
         public $arrayData = [];
-        public $layout =  "default";
-        public $needLogin = true;
+        public $layout = "default";
+        public $needlogin = true;
 
-        public function __construct() {
-            if ($this->needLogin) {
-                if (!\Models\User::checkTheLogin()) {
+        public function __construct(){
+            if($this->needlogin){
+
+                if(\Models\User::checkTheLogin()){
+
+                    \Models\Redirect::to("login");
 
                 }
+
             }
         }
 
-        function set($data){
+        public function set($data){
 
             $this->arrayData = array_merge($this->arrayData, $data);
-
+       
         }
 
-        //import the data and load the layout in Views directory
-        function render($filename){
+        public function render($filename){
+     
+            $className =  get_class($this); 
+            $className = str_replace('Controllers\\' , '' , $className); 
+            $className = str_replace('Controller', '', $className); 
 
-            $classname = get_class($this);                              //"Controllers\tasksController"
-            $classname = str_replace('Controllers\\', '', $classname);  //"tasksController"
-            $classname = str_replace('Controller', '', $classname);    //"tasks"
-            extract($this->vars);
-
+            extract($this->arrayData);
+            
             ob_start();
-            require(ROOT . "Views/" . ucfirst($classname) . '/' . $filename . '.php');
+            require ROOT . "Views/" . ucfirst($className) . '/' . $filename . '.php';
             $content_for_layout = ob_get_clean();
 
             if($this->layout == false){
 
                 echo $content_for_layout;
-                
+
             }else{
-                require(ROOT . "Views/Layouts/" . $this->layout . '.php');
-            }
+
+                require ROOT . "Views/Layout/" . $this->layout . '.php';
+            }       
         }
     }
 ?>

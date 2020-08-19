@@ -7,11 +7,11 @@
 
     include_once ROOT . "vendor/autoload.php";
 
-    // require(ROOT . 'Config/core.php');
+    require(ROOT . 'Config/config.php');
 
     require(ROOT . 'router.php');
     require(ROOT . 'request.php');
-    require(ROOT . 'dispacher.php');
+    require(ROOT . 'dispatcher.php');
 
     $dispatch = new Dispatcher();
     $dispatch->dispatch();

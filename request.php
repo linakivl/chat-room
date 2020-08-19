@@ -3,16 +3,18 @@
 
     class Request{
 
-        public $url;
-        public $controller;
-        public $action;
-        public $params;
+    public $url;
+    public $controller;
+    public $action; 
+    public $params;
 
-        public function __construct(){
+    public function __construct(){
+        //CURRENT URL
+        $this->url = $_SERVER['REQUEST_URI'];
 
-            $this->url = $_SERVER['REQUEST_URI'];
-
-        }
     }
+
+
+}
 
 ?>

@@ -6,7 +6,6 @@
     class User{
 
         private static $salt = "something";
-        public static $signedIn = false;
         public static $active;
 
         private $id, $password;
@@ -61,48 +60,44 @@
 
             $email = htmlspecialchars(self::validateEmail($email));
             $pass = htmlspecialchars(self::passwordEncryption($pass));
+           
 
             $sql = "SELECT * FROM users WHERE userEmail = '{$email}' AND userPassword = '{$pass}'";
             $userExist = Db::getInstance()->getResults($sql);
-
+           
             if(!$userExist){
                 
                 return false;
             }
             if($userExist){
 
-
-                $changeStatus = Db::getInstance()->execute($sql);
-
                 foreach($userExist as $info){
-
-                    $session = new Session();
+                   
+                    $session = new \Models\Session();
                     $_SESSION['id'] = $info['userId'];
                     $_SESSION['username'] = $info['userName'];
                     $_SESSION['key'] = md5(self::$salt . $info['userId']);
-                    
-                    if($_SESSION['id']){
-
-                        return false;
-                    }
+                
                 }
+                return $userExist;
             }
-            return $userExist;
+            
         }
+         
+            
         
         public static function checkTheLogin(){
 
-            $session = new Session();
+            $session = new \Models\Session();
             if(
                 isset($_SESSION['id']) 
                 && isset($_SESSION['key'])
                 && $_SESSION['key'] === md5( self::$salt . $_SESSION['id'])
                 ) {
 
-                self::$signedIn = true;
+                return true;
             }
-            return self::$signedIn;
-
+            return false;
         }
 
 
@@ -115,7 +110,7 @@
 
         public static function checkChars($value){
 
-            if(strlen($value) < 4 && !preg_match("/[a-z0-9]+/", $value)){
+            if(empty($value) || strlen($value) < 4 || !preg_match("/[a-z0-9]+/", $value)){
                 return false;
             }
             return true;
@@ -131,9 +126,9 @@
 
         public static function validateEmail($email){
 
-            $valEmail = trim($email);
-            
-            if(!filter_var(strtolower($valEmail, FILTER_SANITIZE_EMAIL))){
+            $valEmail = trim(strtolower($email));
+            if(!filter_var($valEmail, FILTER_SANITIZE_EMAIL)){
+
                 return false;
             }
             return $valEmail;

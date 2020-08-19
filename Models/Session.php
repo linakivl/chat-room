@@ -7,17 +7,15 @@
 
         public function __construct(){
 
-            if(session_start() == PHP_SESSION_NONE){
-
-                session_start();
-            }
+            session_status() === PHP_SESSION_ACTIVE ?: session_start();
         }
 
-        public function logOut(){
+        public static function userLogout(){
 
             session_unset();
             session_destroy();
-
+            \Models\Redirect::to('Views/Authentication/login');
+           
         }
     }
 ?>
