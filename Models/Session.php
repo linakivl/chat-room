@@ -14,7 +14,7 @@
 
             session_unset();
             session_destroy();
-            \Models\Redirect::to('Views/Authentication/login');
+            \Models\Redirect::to("authentication/login");
            
         }
     }

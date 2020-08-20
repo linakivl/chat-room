@@ -9,8 +9,8 @@
            
             if($url == '/lina-livechat/'){
 
-                $request->controller = "authentication";
-                $request->action = "login";
+                $request->controller = "chat";
+                $request->action = "index";
                 $request->params = [];
                 
             }else{

@@ -5,6 +5,8 @@
 //The render() method is going to import the data with the method extract and then 
 //load the layout requested in the Views directory. Moreover, this allows us to have a 
 //layout in order to avoid the stupid repetition of HTML in our views.
+
+//needlogin poious controller theloume na vlepoume xwris na eisai login 
     namespace Controllers\Core;
 
     class Controller{
@@ -14,11 +16,12 @@
         public $needlogin = true;
 
         public function __construct(){
+
             if($this->needlogin){
 
-                if(\Models\User::checkTheLogin()){
+                if(!\Models\User::checkTheLogin()){
 
-                    \Models\Redirect::to("login");
+                    \Models\Redirect::to("authentication/login");
 
                 }
 

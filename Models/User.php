@@ -41,8 +41,9 @@
                 }
                 
             }else{
-                
-                $sql = "INSERT INTO (userName, userEmail, userPassword , userStatus) VALUES ('{$this->username}', '{$this->email}', '{$this->password}')";
+               
+                $sql = "INSERT INTO users (userName, userEmail, userPassword) VALUES ('{$this->username}', '{$this->email}', '{$this->password}')";
+              
                 try{
 
                     Db::getInstance()->execute($sql);
@@ -94,26 +95,85 @@
                 && isset($_SESSION['key'])
                 && $_SESSION['key'] === md5( self::$salt . $_SESSION['id'])
                 ) {
-
                 return true;
+
             }
             return false;
         }
 
 
 
-        public function registerUser(){
+        public function registerUser($username, $email, $pass){
+            
+            $username =  htmlspecialchars(self::checkUsername($username));
+            $email = lcfirst(htmlspecialchars(self::validateEmail($email)));
+            $pass = htmlspecialchars(self::passwordEncryption($pass));
+        
+            if(!$username){
+
+                //the chars must have up 4 letters and have the following [a-z0-9] 
+                return false;
+            }
+            if(!$email){
+
+                //email is not valid
+               
+                return false;
+            }
+            if(!$pass){
+
+                 //the chars must have up 4 letters and have the following [a-z0-9] 
+                return false;
+            }
+
+            $sql = "SELECT userEmail FROM users WHERE userEmail = '{$email}'";
+            $existUser = Db::getInstance()->getResults($sql);
+         
+            if($existUser){
+
+               return false;    
+            }
+            
+            try{
+
+                $this->username = $username;
+               
+                $this->email = $email;
+                $this->setPass($pass);
+                $id = $this->save();
+
+            }catch(\Exception $e){
+
+                var_dump($e->getMessage());
+
+            }
             
 
+            if($id){
+                $session = new \Models\Session();
+                $_SESSION['username'] = $this->username;
+                $_SESSION['id'] = $id;
+                $_SESSION['key'] = md5( self::$salt . $id);
+                
+                return true;
+            }
+            return false;
         }
        
+        public function setPass($pass){
+        
+            $this->password = $pass;
+
+        }
 
         public static function checkChars($value){
 
+            $value = trim($value);
             if(empty($value) || strlen($value) < 4 || !preg_match("/[a-z0-9]+/", $value)){
+ 
                 return false;
             }
-            return true;
+            return $value;
         }
 
         public static function checkUsername($username){
@@ -121,7 +181,7 @@
             if(!self::checkChars($username)){
                 return false;
             }
-            return true;
+            return $username;
         }
 
         public static function validateEmail($email){
