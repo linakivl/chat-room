@@ -6,6 +6,7 @@
 
         public function dispatch(){
 
+            new \Models\Session();
             $this->request = new Request();
             Router::parse($this->request);
         

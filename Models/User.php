@@ -5,8 +5,11 @@
 
     class User{
 
+      
         private static $salt = "something";
         public static $active;
+        public static $errors = ["The chars must have up 4 letters and have the following [a-z0-9]", 
+        "Email is not Valid", "Username Exists"];
 
         private $id, $password;
         public $username, $email;
@@ -62,19 +65,23 @@
             $email = htmlspecialchars(self::validateEmail($email));
             $pass = htmlspecialchars(self::passwordEncryption($pass));
            
+            // if(!$email || !$pass){
 
+              
+            //     return false;
+            // }
             $sql = "SELECT * FROM users WHERE userEmail = '{$email}' AND userPassword = '{$pass}'";
             $userExist = Db::getInstance()->getResults($sql);
            
             if(!$userExist){
-                
+                \Models\Messages::setMessage(self::$errors[0], "error", "log");
+            
                 return false;
             }
             if($userExist){
 
                 foreach($userExist as $info){
                    
-                    $session = new \Models\Session();
                     $_SESSION['id'] = $info['userId'];
                     $_SESSION['username'] = $info['userName'];
                     $_SESSION['key'] = md5(self::$salt . $info['userId']);
@@ -89,7 +96,7 @@
         
         public static function checkTheLogin(){
 
-            $session = new \Models\Session();
+        
             if(
                 isset($_SESSION['id']) 
                 && isset($_SESSION['key'])
@@ -110,27 +117,24 @@
             $pass = htmlspecialchars(self::passwordEncryption($pass));
         
             if(!$username){
-
-                //the chars must have up 4 letters and have the following [a-z0-9] 
+                \Models\Messages::setMessage(self::$errors[0], "error", "reg");
                 return false;
             }
             if(!$email){
-
-                //email is not valid
-               
+                \Models\Messages::setMessage(self::$errors[1], "error", "reg");
                 return false;
             }
             if(!$pass){
-
-                 //the chars must have up 4 letters and have the following [a-z0-9] 
+                  \Models\Messages::setMessage(self::$errors[0], "error", "reg");
                 return false;
             }
+             
 
             $sql = "SELECT userEmail FROM users WHERE userEmail = '{$email}'";
             $existUser = Db::getInstance()->getResults($sql);
          
             if($existUser){
-
+                \Models\Messages::setMessage($this->error[0], "error","reg");
                return false;    
             }
             
@@ -150,7 +154,7 @@
             
 
             if($id){
-                $session = new \Models\Session();
+   
                 $_SESSION['username'] = $this->username;
                 $_SESSION['id'] = $id;
                 $_SESSION['key'] = md5( self::$salt . $id);
@@ -179,8 +183,21 @@
         public static function checkUsername($username){
 
             if(!self::checkChars($username)){
+
+            
+                return false;
+
+            }
+            $sql = "SELECT userName FROM users WHERE userName= '{$username}'";
+       
+            $existUsername = Db::getInstance()->getResults($sql);
+
+            if($existUsername){
+               
+                \Models\Messages::setMessage(self::$errors[2], "error");
                 return false;
             }
+            
             return $username;
         }
 
@@ -188,7 +205,8 @@
 
             $valEmail = trim(strtolower($email));
             if(!filter_var($valEmail, FILTER_SANITIZE_EMAIL)){
-
+                
+               
                 return false;
             }
             return $valEmail;
@@ -198,8 +216,12 @@
         public static function passwordEncryption($pass){
 
             if(!self::checkChars($pass)){
+
+              
                 return false;
+
             }
+
             $pass = hash("sha512", $pass);
             return $pass;
         }
