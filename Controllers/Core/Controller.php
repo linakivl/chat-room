@@ -20,7 +20,7 @@
             if($this->needlogin){
 
                 if(!\Models\User::checkTheLogin()){
-
+                    
                     \Models\Redirect::to("authentication/login");
 
                 }
@@ -31,7 +31,7 @@
         public function set($data){
 
             $this->arrayData = array_merge($this->arrayData, $data);
-       
+          
         }
 
         public function render($filename){

@@ -7,7 +7,7 @@
 
             $url = trim($request->url);
            
-            if($url == '/lina-livechat/'){
+            if($url == '/lina-chat/'){
 
                 $request->controller = "chat";
                 $request->action = "index";

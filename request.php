@@ -9,12 +9,11 @@
     public $params;
 
     public function __construct(){
+      
         //CURRENT URL
         $this->url = $_SERVER['REQUEST_URI'];
-
+       
     }
-
-
 }
 
 ?>

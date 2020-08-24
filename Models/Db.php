@@ -38,7 +38,7 @@ class Db {
             $stmt->setFetchMode(\PDO::FETCH_ASSOC);
 
             $results = $stmt->fetchAll();
-
+           
             if(!$results){
 
                 return [];

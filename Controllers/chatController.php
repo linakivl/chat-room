@@ -8,7 +8,6 @@
 
         public function index(){
 
-            
             $this->render("index");
            
         }

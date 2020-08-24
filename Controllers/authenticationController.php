@@ -9,38 +9,45 @@ class AuthenticationController extends Core\Controller{
         public $needlogin = false;
 
         public function login(){
-
+           
             if(\Models\User::checkTheLogin()){
 
                 \Models\Redirect::to("chat/index");
             }
 
-            if ($errorMsg = \Models\Messages::getMessage()) {
-               
-                $data = [];
-                $data['errorMsg'] = $errorMsg;
-                $this->set($data);
-            }
+      
             $this->render("login");
             
         }
 
         public function login_check() {
-            if(isset($_POST['userLoginBtn'])){
+           
+            if(isset($_POST['action']) == 'login-task'){
+               
                 
-               
-                $email = filter_var($_POST['userEmail'], FILTER_SANITIZE_EMAIL);
+                $email = filter_var($_POST['userEmail'], FILTER_VALIDATE_EMAIL);
                 $password = filter_var($_POST['userPass'], FILTER_SANITIZE_STRING);
-
-                $user = \Models\User::loginUser($email, $password);
                
-                if($user){
-                    \Models\Redirect::to("chat/index");
+                if(!$email){
+                    echo "Email is not valid";
+                    exit();
                 }
                
-    
-                \Models\Redirect::to("authentication/login");
-
+                $user = \Models\User::loginUser($email, $password);
+                
+                if(is_string($user)){
+                  
+                    if(strcmp($user,"noexist") === 0){
+                        echo "User Not Exist";
+                    }
+                    if(strcmp($user,"wrong") === 0){
+                        echo "Wrong Email or Password";
+                    }
+                }
+                if(is_array($user)){
+                    
+                    \Models\Redirect::to("chat/index");
+                }
             }
         }
         public function logout(){
@@ -49,27 +56,58 @@ class AuthenticationController extends Core\Controller{
             $session::userLogout();
 
         }
+        public function register(){
+            if(\Models\User::checkTheLogin()){
 
+                \Models\Redirect::to("chat/index");
+            }
+
+
+            $this->render("register");
+
+        }
+        
         public function registerUser(){
-
-           
-
-            if(isset($_POST['registerBtn'])){
+         
+        
+            if(isset($_POST['action']) == 'register-task'){
+               
 
                 $username = filter_var($_POST['userName'], FILTER_SANITIZE_STRING);
-                $email = filter_var($_POST['userEmail'], FILTER_SANITIZE_EMAIL);
+                $email = filter_var($_POST['userEmail'], FILTER_VALIDATE_EMAIL);
                 $password = filter_var($_POST['userPass'], FILTER_SANITIZE_STRING);
-                
-                $newUser = new \Models\User();
-                $login = $newUser->registerUser($username, $email, $password);
+
+                if(!$email){
+                    echo "Email is not valid";
+                    exit();
+                }
+              
                
-                
-                if($login){
+                $newUser = new \Models\User();
+                $login = $newUser->newUser($username, $email, $password);
+             
+                if(is_string($login)){
+                  
+                    if(strcmp($login,"username")  === 0 || strcmp($login,"pass") === 0){
+                        echo "The username or password field must contain at least 4 characters";
+                        
+                    }
+                    if(strcmp($login,"userexist")  === 0){
+                        echo "You already have acount";
+                      
+                    }
+                }
+               
+                if(is_bool($login)){
+                  
                     \Models\Redirect::to("chat/index");
-                }                
-                \Models\Redirect::to("authentication/register");
+                    var_dump($login);
+                    exit();
+                }               
+       
             }
           
         }
+
     }
 ?>
