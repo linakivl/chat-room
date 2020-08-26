@@ -1,5 +1,5 @@
 
-<h2>Hello <?php echo $_SESSION['username'];?></h2>
+<h2>Hello <?php echo $_SESSION['username'];  echo $_SESSION['loginId'];?></h2>
 
 <form action="<?php echo WEBROOT . 'chat/logoutUser'?>" method="POST">
    

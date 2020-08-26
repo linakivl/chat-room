@@ -85,7 +85,7 @@ class AuthenticationController extends Core\Controller{
                
                 $newUser = new \Models\User();
                 $login = $newUser->newUser($username, $email, $password);
-             
+               
                 if(is_string($login)){
                   
                     if(strcmp($login,"username")  === 0 || strcmp($login,"pass") === 0){
@@ -97,12 +97,11 @@ class AuthenticationController extends Core\Controller{
                       
                     }
                 }
-               
+           
                 if(is_bool($login)){
                   
                     \Models\Redirect::to("chat/index");
-                    var_dump($login);
-                    exit();
+
                 }               
        
             }

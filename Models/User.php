@@ -8,11 +8,10 @@
       
         private static $salt = "something";
         public static $active;
-        public static $errors = ["The chars must have up 4 letters and have the following [a-z0-9]", 
-        "Email is not Valid", "Username Exists"];
 
         private $id, $password;
         public $username, $email;
+        public $userLoginId;
 
         public function __construct($id = false){
 
@@ -36,7 +35,7 @@
            
             if($this->id){
                 //update user
-                $sql = "UPDATE users SET userName = $this->username, userEmail = $this-email, userPassword = $this->password";
+                $sql = "UPDATE users SET userName = $this->username, userEmail = $this-email, userPassword = $this->password WHERE userId = $this->id";
                 try{
                     Db::getInstance()->execute($sql);
                 }catch(\Exception $e){
@@ -60,6 +59,35 @@
             }
 
         }
+        public static function changeUserDetails($userId){
+          
+            $loginDetailsSql = "SELECT * FROM login_details WHERE loginUserId = '{$userId}' ";
+            
+            $loginDetails = Db::getInstance()->getResults($loginDetailsSql);
+          
+            if(!$loginDetails){
+
+                $sql = "INSERT INTO login_details (loginUserId) VALUES ('$userId')";
+                $result = Db::getInstance()->execute($sql);
+                $userLoginId = Db::getInstance()->getLastInsert();
+              
+                return $userLoginId;
+              
+            }else{
+                //Update the same user login time 
+                $sql = "UPDATE login_details SET  loginUserActivity = NOW() WHERE loginUserId = $userId";
+                $result =  Db::getInstance()->execute($sql);
+                  
+                if($result){
+                    
+                    $updateDetails = Db::getInstance()->getResults($loginDetailsSql);
+                    return $updateDetails;
+
+                }
+            }
+
+        }
+
 
         public static function loginUser($email, $pass){
            
@@ -76,7 +104,7 @@
                 return "noexist"; 
                
             }
-         
+           
             if($userExist){
                 
                 $sqlUserValid = "SELECT * FROM users WHERE userEmail = '{$email}' AND  userPassword = '{$password}' ";
@@ -88,15 +116,23 @@
                 }
 
                 if($userValid){
-                    
+
+                 
                     foreach($userValid as $info){
                               
                         $_SESSION['id'] = $info['userId'];
                         $_SESSION['username'] = $info['userName'];
                         $_SESSION['key'] = md5(self::$salt . $info['userId']);
-                    
-                    }
+                        $userActivity = self::changeUserDetails($_SESSION['id']);
+                        foreach($userActivity as $details){
 
+                            $_SESSION['loginId'] = $details['loginId'];
+                            $_SESSION['timelogin'] = $details['loginUserActivity'];
+
+                        }
+                                              
+                    }
+                   
                     return $userValid;
 
                 }
@@ -153,7 +189,12 @@
                 $this->email = $email;
                 $this->setPass($pass);
                 $id = $this->save();
-               
+                if($id){
+
+                    $this->userLoginId = self::changeUserDetails($id);
+                   
+                }
+                
 
             }catch(\Exception $e){
 
@@ -163,11 +204,12 @@
             
 
             if($id){
-               
+                
                 $_SESSION['username'] = $this->username;
                 $_SESSION['id'] = $id;
                 $_SESSION['key'] = md5( self::$salt . $id);
-
+                $_SESSION['loginId'] = $this->userLoginId;
+               
                 return true;
             }
      
