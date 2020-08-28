@@ -16,10 +16,7 @@ class AuthenticationController extends Core\Controller{
             }
            
                   $this->render("login");
-            
-      
-         
-            
+             
         }
 
         public function login_check() {
