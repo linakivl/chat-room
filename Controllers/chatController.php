@@ -11,14 +11,7 @@
             $this->render("index");
            
         }
-        public function logoutUser(){
-        
-            if(isset($_POST['userLogout'])){
-
-                \Models\Session::userLogout();
-            }
-
-        }
+       
 
     }
 ?>

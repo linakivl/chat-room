@@ -8,7 +8,7 @@
       
         private static $salt = "something";
         public static $active;
-
+        public $errors = [];
         private $id, $password;
         public $username, $email;
         public $userLoginId;
@@ -101,7 +101,9 @@
            
             if(!$userExist){
                
-                return "noexist"; 
+                $errors = "The User Not Exist";
+                return $errors; 
+                exit();
                
             }
            
@@ -109,10 +111,13 @@
                 
                 $sqlUserValid = "SELECT * FROM users WHERE userEmail = '{$email}' AND  userPassword = '{$password}' ";
                 $userValid = Db::getInstance()->getResults($sqlUserValid);
-                
+              
                 if(!$userValid){
-                   
-                    return "wrong";   
+
+                    $errors = "Wrong Password or Email";
+                    return $errors; 
+                    exit();   
+
                 }
 
                 if($userValid){
@@ -129,15 +134,15 @@
                             $_SESSION['loginId'] = $details['loginId'];
                             $_SESSION['timelogin'] = $details['loginUserActivity'];
 
-                        }
-                                              
+                        }                  
                     }
-                   
-                    return $userValid;
-
+                    $errors = [];
+                    return true;
                 }
+               
             }
         }
+       
 
         public static function checkTheLogin(){
 
@@ -162,13 +167,15 @@
             $pass = self::passwordEncryption($pass);
           
             if(!$username){
-                return  "username";
+                $errors = "The username or password field must contain at least 4 characters";
+                return $errors; 
                 exit();
               
             }
             if(!$pass){
                 
-                return "pass";
+                $errors = "The username or password field must contain at least 4 characters";
+                return $errors; 
                 exit();
             }
     
@@ -178,8 +185,9 @@
             
             if($existUser){
 
-               return "userexist";  
-               exit();
+                $errors =  "You already have acount";
+                return $errors; 
+                exit();
                
             }
             
