@@ -87,7 +87,10 @@ class AuthenticationController extends Core\Controller{
                 $password = filter_var($_POST['userPass'], FILTER_SANITIZE_STRING);
 
                 if(!$email){
-                    echo "Email is not valid";
+                    $error =  "Email is not valid";
+                    echo json_encode($error, JSON_PRETTY_PRINT);
+                    file_put_contents("erros.json", $error);
+                    
                     exit();
                 }
                 if($email && $password && $username){
@@ -98,13 +101,13 @@ class AuthenticationController extends Core\Controller{
                     if(is_string($login)){
 
                         echo json_encode($login, JSON_PRETTY_PRINT);
-                        file_put_contents("../erros.json", $login);
+                        file_put_contents("erros.json", $login);
                         exit();
                     }
                     else{  
                         $emptyjson = [];
                         json_encode($emptyjson);
-                        file_put_contents("../erros.json", $emptyjson);  
+                        file_put_contents("erros.json", $emptyjson);  
                         echo true;
                     }
                 }                
