@@ -2,7 +2,7 @@
 
     namespace Controllers;
 
-    use Models\Messages;
+ 
 
 class AuthenticationController extends Core\Controller{
 
@@ -30,7 +30,6 @@ class AuthenticationController extends Core\Controller{
                 if(!$email){
                     $error =  "Email is not valid";
                     echo json_encode($error, JSON_PRETTY_PRINT);
-                    file_put_contents("../erros.json", $error);
                     
                     exit();
                 }
@@ -38,33 +37,36 @@ class AuthenticationController extends Core\Controller{
 
                     $user = \Models\User::loginUser($email, $password);
                     if(is_string($user)){
-
+                        
                         echo json_encode($user, JSON_PRETTY_PRINT);
-                        file_put_contents("../erros.json", $user);
+
                         exit();
                     }
                     else{    
-                        $emptyjson = [];
-                        json_encode($emptyjson);
-                        file_put_contents("../erros.json", $emptyjson);
+
                         echo true;
+
                     }
                 } 
                 
             }
         }
 
-        public function chatIndex(){
-             \Models\Redirect::to("chat/index");
-        }
-        public function logoutUser(){
-        
-            if(isset($_POST['userLogout'])){
+        public function usernameCheck(){
+            $userNameSet = $_POST['newUsername'];
+            $userId = $_SESSION['id'];
+         
+            $userNameUpdate = new \Models\User($userId, $userNameSet);
+            $set = $userNameUpdate->save();
+            if($set){
 
-                \Models\Session::userLogout();
+                echo true;
+
             }
-
         }
+     
+
+      
         public function register(){
             if(\Models\User::checkTheLogin()){
 
@@ -89,7 +91,7 @@ class AuthenticationController extends Core\Controller{
                 if(!$email){
                     $error =  "Email is not valid";
                     echo json_encode($error, JSON_PRETTY_PRINT);
-                    file_put_contents("erros.json", $error);
+
                     
                     exit();
                 }
@@ -101,13 +103,11 @@ class AuthenticationController extends Core\Controller{
                     if(is_string($login)){
 
                         echo json_encode($login, JSON_PRETTY_PRINT);
-                        file_put_contents("erros.json", $login);
+    
                         exit();
                     }
                     else{  
-                        $emptyjson = [];
-                        json_encode($emptyjson);
-                        file_put_contents("erros.json", $emptyjson);  
+                         
                         echo true;
                     }
                 }                
@@ -115,6 +115,19 @@ class AuthenticationController extends Core\Controller{
             }
           
         }
+        public function redirectToChat(){
+
+            \Models\Redirect::to("chat/index");
+       }
+
+        public function logoutUser(){
+       
+           if(isset($_POST['userLogout'])){
+
+               \Models\Session::userLogout();
+           }
+
+       }
 
     }
 ?>

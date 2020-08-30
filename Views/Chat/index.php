@@ -1,9 +1,8 @@
 
-<h2>Hello <?php echo $_SESSION['username'];  echo $_SESSION['loginId'];?></h2>
+<h2>Hello <?php echo $_SESSION['username'];  ?></h2>
 
-<form action="<?php echo WEBROOT . 'authentication/logoutUser'?>" method="POST">
-   
-    <input type="submit" name="userLogout" value="Logout">
-    <div class="activeUserBox"></div>
-
-</form>
+<input type="submit" id="logOutBtn" name="userLogout" value="Logout">
+<div id="activeUserBox"></div>
+<div id="viewChatMessages"></div>
+<input type="text" id="mainchatText" placeholder="Say something..">
+<input type="submit" id="mainchatBtn" value="send">

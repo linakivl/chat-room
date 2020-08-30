@@ -4,10 +4,13 @@
     <input type="password" id="logPass" name="userPass" placeholder="Password" required>
     <input type="submit"  id="userLoginBtn" name="userLoginBtn" value="Login">
     <p id="logError"></p>
+    <div class="setUsernameBox" style="display:none">Set your username: 
+        <input type="text" id="usernameInput">
+        <input type="submit" id="setUsernameBtn" value="submit">
+        <p id="usernameError"></p>
+    </div>
     <a href="<?php echo WEBROOT . 'authentication/register'?>">Register</a>
-    <?php
-   
-    ?>
+    
 </form>
 </br>
 

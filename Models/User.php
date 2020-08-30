@@ -7,18 +7,18 @@
 
       
         private static $salt = "something";
-        public static $active;
+
         public $errors = [];
         private $id, $password;
         public $username, $email;
         public $userLoginId;
 
-        public function __construct($id = false){
+        public function __construct($id = false, $username = false){
 
           if($id){
 
-            $sql = "SELECT * FROM users WHERE id = {$id}";
-            $userEntity = Db::getInstance()->getResults($sql);
+            $sql = "SELECT * FROM users WHERE userId = '{$id}'";
+            $userEntity = \Models\Db::getInstance()->getResults($sql);
 
             if(!$userEntity){
 
@@ -26,18 +26,25 @@
 
             }
             $this->id = $id;
-            $this->email = $userEntity[0]->email;
-            $this->username = $userEntity[0]->username;
+           
+            $this->username = $username;
           }
         }
 
         public function save(){
-           
+            
             if($this->id){
+                
                 //update user
-                $sql = "UPDATE users SET userName = $this->username, userEmail = $this-email, userPassword = $this->password WHERE userId = $this->id";
+                $sql = "UPDATE users SET userName = '{$this->username}'  WHERE userId = '{$this->id}'";
+              
                 try{
-                    Db::getInstance()->execute($sql);
+                    $set = \Models\Db::getInstance()->execute($sql);
+                    if($set){
+                        $_SESSION['username'] = $this->username;
+                        return $true;
+                    }
+                    
                 }catch(\Exception $e){
                     return false;
                 }
@@ -109,7 +116,7 @@
            
             if($userExist){
                 
-                $sqlUserValid = "SELECT * FROM users WHERE userEmail = '{$email}' AND  userPassword = '{$password}' ";
+                $sqlUserValid = "SELECT * FROM users WHERE userEmail = '{$email}' AND  userPassword = '{$password}' LIMIT 1";
                 $userValid = Db::getInstance()->getResults($sqlUserValid);
               
                 if(!$userValid){
@@ -122,20 +129,23 @@
 
                 if($userValid){
 
-                 
                     foreach($userValid as $info){
                               
                         $_SESSION['id'] = $info['userId'];
-                        $_SESSION['username'] = $info['userName'];
                         $_SESSION['key'] = md5(self::$salt . $info['userId']);
-                        $userActivity = self::changeUserDetails($_SESSION['id']);
-                        foreach($userActivity as $details){
 
-                            $_SESSION['loginId'] = $details['loginId'];
-                            $_SESSION['timelogin'] = $details['loginUserActivity'];
+                        
+                        // $userActivity = self::changeUserDetails($_SESSION['id']);
+                        // foreach($userActivity as $details){
 
-                        }                  
+                        //     $_SESSION['loginId'] = $details['loginId'];
+                        //     $_SESSION['timelogin'] = $details['loginUserActivity'];
+                        // }      
+                        $status = 1;
+                        self::changeUserStatus($status, $_SESSION['id']);   
                     }
+                   
+                    
                     $errors = [];
                     return true;
                 }
@@ -143,6 +153,14 @@
             }
         }
        
+        public static function changeUserStatus($status, $userId){
+
+            $sql= "UPDATE login_details SET  status = '{$status}' WHERE loginUserId ='{$userId}'";
+            $userActiveStatus = Db::getInstance()->execute($sql); 
+            if($userActiveStatus){
+                return true;
+            }
+        }
 
         public static function checkTheLogin(){
 
@@ -217,10 +235,21 @@
                 $_SESSION['id'] = $id;
                 $_SESSION['key'] = md5( self::$salt . $id);
                 $_SESSION['loginId'] = $this->userLoginId;
-               
+                $status = 1;
+                self::changeUserStatus($status, $_SESSION['id']);
                 return true;
             }
      
+        }
+
+        public function getOnlineUsers($currentUser){
+           
+            $sql = "SELECT userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId
+            WHERE login_details.status = 1 AND login_details.loginUserId != '{$currentUser}'";
+            $onlineUsers = \Models\Db::getInstance()->getResults($sql);
+            
+            return $onlineUsers;
+
         }
        
         public function setPass($pass){
