@@ -42,7 +42,7 @@
                     $set = \Models\Db::getInstance()->execute($sql);
                     if($set){
                         $_SESSION['username'] = $this->username;
-                        return $true;
+                        return true;
                     }
                     
                 }catch(\Exception $e){
@@ -97,11 +97,11 @@
 
 
         public static function loginUser($email, $pass){
-           
+            
             
          $email = self::validateEmail($email);
-         $password =  crypt('somethingforpassword', $pass);
-    
+         $password =   self::passwordEncryption($pass);
+         
             $sql = "SELECT userEmail FROM users WHERE userEmail = '{$email}'";
             $userExist = Db::getInstance()->getResults($sql);
             
@@ -117,8 +117,10 @@
             if($userExist){
                 
                 $sqlUserValid = "SELECT * FROM users WHERE userEmail = '{$email}' AND  userPassword = '{$password}' LIMIT 1";
+
+               
                 $userValid = Db::getInstance()->getResults($sqlUserValid);
-              
+           
                 if(!$userValid){
 
                     $errors = "Wrong Password or Email";
@@ -135,12 +137,12 @@
                         $_SESSION['key'] = md5(self::$salt . $info['userId']);
 
                         
-                        // $userActivity = self::changeUserDetails($_SESSION['id']);
-                        // foreach($userActivity as $details){
+                        $userActivity = self::changeUserDetails($_SESSION['id']);
+                        foreach($userActivity as $details){
 
-                        //     $_SESSION['loginId'] = $details['loginId'];
-                        //     $_SESSION['timelogin'] = $details['loginUserActivity'];
-                        // }      
+                            $_SESSION['loginId'] = $details['loginId'];
+                            $_SESSION['timelogin'] = $details['loginUserActivity'];
+                        }      
                         $status = 1;
                         self::changeUserStatus($status, $_SESSION['id']);   
                     }
@@ -168,11 +170,13 @@
             if(
                 isset($_SESSION['id']) 
                 && isset($_SESSION['key'])
-                && $_SESSION['key'] === md5( self::$salt . $_SESSION['id'])
+                && $_SESSION['key'] == md5( self::$salt . $_SESSION['id'] ) && isset($_SESSION['username'])
                 ) {
+                
                 return true;
 
             }
+          
             return false;
         }
 
@@ -242,7 +246,7 @@
      
         }
 
-        public function getOnlineUsers($currentUser){
+        public static function getOnlineUsers($currentUser){
            
             $sql = "SELECT userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId
             WHERE login_details.status = 1 AND login_details.loginUserId != '{$currentUser}'";
@@ -305,7 +309,7 @@
                
                 return false;
             }
-            $pass = crypt('somethingforpassword', $pass);
+            $pass = md5($pass);
             return $pass;
         }
     }

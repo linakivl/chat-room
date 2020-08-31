@@ -48,7 +48,6 @@ $(document).ready(function(){
                     data: {
                         "newUsername": username
                     }, success: function(data){
-                        console.log(data);
                         // $("#logError").html(data);
                     }
                 })
