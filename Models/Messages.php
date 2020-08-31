@@ -19,7 +19,7 @@
         public static function getLines($lastInsertId){
 
             if(!$lastInsertId){
-
+                
                 return "No messages yet";
             }
             // $sql = "SELECT publicUsername,publicText,publicTimetext FROM public_chat WHERE publictId = '{$lastInsertId} > ? 
