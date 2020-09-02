@@ -33,32 +33,48 @@ $(document).ready(function(){
 
     $("#setUsernameBtn").click(function(e){
         e.preventDefault();
-        var username = $("#usernameInput").val();
-        var check = checkUsername(username);
        
-        if(check === true){
-            
-             $.when(
-
-                $.ajax({
-
-                    url: "usernameCheck",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "newUsername": username
-                    }, success: function(data){
-                        // $("#logError").html(data);
-                    }
-                })
-
-            ).then(redirectToMain());
-              
-        }
+        validateUsername();
+            // validateUsername().done(function(data){});
     });
 
+
+    function validateUsername(){
+        var username = $("#usernameInput").val();
+        var check = checkUsername(username);
+        if(check === true){
+        return  $.ajax({
+
+            url: "usernameCheck",
+            type: "post",
+            dataType: "json",
+            data: {
+                "newUsername": username
+            }, success: function(data){
+
+                
+                if($.isNumeric(data)){
+                    $.ajax({
+
+                        url: "redirectToChat",
+                         success: function(data){
+                            $('#usernameError').html("");
+                            location.reload();
+                        }
+                    });
+                   
+                }else{
+                    $('#usernameError').html(data);
+                }
+              
+            }
+        });
+    }
+    }
+
     function checkUsername(username){
-    
+
+        
         if(username.length <= 4 || username.value === "" || /[^A-Za-z\d]/.test(username)){
             
             document.getElementById("usernameError").innerHTML = "Your username must contain at least 4 characters";
@@ -68,15 +84,13 @@ $(document).ready(function(){
          return true;   
      
     }
+
+
+
+
     function redirectToMain(){
 
-        $.ajax({
-
-            url: "redirectToChat",
-             success: function(data){
-                location.reload();
-            }
-        });
+      
     }
 
     $("#userRegBtn").click(function(e){

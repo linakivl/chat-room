@@ -52,55 +52,56 @@ $(document).ready(function(){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///SE EPEKSERGASIA
-    $('#mainchatBtn').click(function(){
-
+    $('#mainchatBtn').click(function(e){
+        e.preventDefault();
         var userText = $("#mainchatText").val();
-        var promiseSendChat = promiseSendChat(userText);
-        console.log(promiseSendChat);
-        // var promiseGetLinesChat = promiseGetLinesChat();
-        // var promisechat1 = $.when(promiseSendChat,promiseGetLinesChat);
-        // promisechat1.done(function(){
+      
+        saveData(userText).done(function(data){
+        if(data > 0){
 
+            showData(data);
+
+        }
+          
         });
-        // $('#viewChatMessages').html(userText);
+     
 
-  
-
-
-    //mia start function pou tha exei mesa thn getLines me to pou ksekinaei h efarmogh 
-    function promiseSendChat(userText){
-
-        return $.ajax({
+    });
+    function saveData(text){
+       
+          return $.ajax({
 
             url: "sendLineToDb",
             type: "post",
             data: {
-                'action': "sendLineToDb",
-                "sendText": text
-            }
-            ,success(data){
-                // console.log(data);
+
+                "action" : "sendLineToDb",
+                "sendText" : text
             }
 
-        });
-
-    } 
-
-    function promiseGetLinesChat(data){
-        var data = data;
-        console.log(data);
-        $.ajax({
-
-            url: "getLinesFromDb",
-            data :{
-                "userId" : data
-            },
-            success(data){
-                $("#viewChatMessages").html(data);
-            }
         });
 
     }
+
+    function showData(userid){
+
+          $.ajax({
+
+            url: "getLinesFromDb",
+            type: "post",
+            data: {
+
+                "userId" : userid
+            },success: function(data){
+
+                $('#viewChatMessages').html(data);
+                
+            }
+
+        });
+  
+      }
+    
 });
 
 

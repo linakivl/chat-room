@@ -51,18 +51,24 @@ class AuthenticationController extends Core\Controller{
                 
             }
         }
-
+      
         public function usernameCheck(){
             $userNameSet = $_POST['newUsername'];
             $userId = $_SESSION['id'];
          
             $userNameUpdate = new \Models\User($userId, $userNameSet);
             $set = $userNameUpdate->save();
-            if($set){
-
+       
+            if($set === false){
+                $errors = "Username already used";
+                echo json_encode($errors, JSON_PRETTY_PRINT);
+               
+                exit();
+            }else{
+                
                 echo true;
-
             }
+           
         }
      
 
@@ -92,7 +98,6 @@ class AuthenticationController extends Core\Controller{
                     $error =  "Email is not valid";
                     echo json_encode($error, JSON_PRETTY_PRINT);
 
-                    
                     exit();
                 }
                 if($email && $password && $username){

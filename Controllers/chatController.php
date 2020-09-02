@@ -49,18 +49,34 @@
         public function sendLineToDb(){
 
             if($_POST['action'] == "sendLineToDb"){
+
                 $result = \Models\Messages::setLines($_SESSION['username'], $_POST['sendText']);
-              
+                
                 echo $result;
             }
         }
+        
         public function getLinesFromDb(){
 
-            $lineId = \Models\Messages::getLines($_POST['userId'] = false);
-           
-            echo $lineId;
+            $text = \Models\Messages::getLines($_POST['userId']);
+            foreach($text as $col){
 
+                
+            $output = 
+                "
+                    <span>{$col['publicUsername']}</span>
+                    
+                    <span>{$col['publicTimetext']}</span>
+                    <p>{$col['publicText']}</p>
+                       
+                ";
+            }
+            echo $output;
         }
+            
+        
+         
+        
 
         public function logoutUser(){
 

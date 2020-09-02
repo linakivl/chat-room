@@ -16,15 +16,21 @@
         public function __construct($id = false, $username = false){
 
           if($id){
-
-            $sql = "SELECT * FROM users WHERE userId = '{$id}'";
+          
+            $sql = "SELECT userName FROM users WHERE userId != '{$id}'";
             $userEntity = \Models\Db::getInstance()->getResults($sql);
-
-            if(!$userEntity){
-
-                throw new \Exception('Failed to find user');
-
+           
+            foreach($userEntity as $user){
+                foreach($user as $name){
+                    $string = strcmp($username, $name);
+                    if($string == 0){
+                        
+                        return "false";
+                        exit();
+                    }
+                }
             }
+           
             $this->id = $id;
            
             $this->username = $username;
@@ -50,7 +56,9 @@
                 }
                 
             }else{
-               //create user
+              
+               
+                
                 $sql = "INSERT INTO users (userName, userEmail, userPassword) VALUES ('{$this->username}', '{$this->email}', '{$this->password}')";
               
                 try{
@@ -189,7 +197,7 @@
             $pass = self::passwordEncryption($pass);
           
             if(!$username){
-                $errors = "The username or password field must contain at least 4 characters";
+                $errors = "The username field must contain at least 4 characters";
                 return $errors; 
                 exit();
               
@@ -212,7 +220,21 @@
                 exit();
                
             }
+            if($username){
+
+                $sql = "SELECT userName FROM users WHERE userName= '{$username}'";
+       
+                $existUsername = Db::getInstance()->getResults($sql);
+    
+                if($existUsername){
+                   
+                    $errors =  "Username already exist";
+                    return $errors; 
+                    exit();
+                }
+            }
             
+          
             try{
 
                 $this->username = $username;
@@ -280,14 +302,7 @@
 
             }
 
-            $sql = "SELECT userName FROM users WHERE userName= '{$username}'";
-       
-            $existUsername = Db::getInstance()->getResults($sql);
-
-            if($existUsername){
-               
-                return false;
-            }
+           
             
             return $username;
         }
