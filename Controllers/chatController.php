@@ -56,28 +56,42 @@
             }
         }
         
-        public function getLinesFromDb(){
+        // public function getLinesFromDb(){
 
-            $text = \Models\Messages::getLines($_POST['userId']);
-            foreach($text as $col){
+        //     $text = \Models\Messages::getLines($_POST['userId']);
+        //     foreach($text as $col){
 
                 
-            $output = 
-                "
-                    <span>{$col['publicUsername']}</span>
-                    
-                    <span>{$col['publicTimetext']}</span>
-                    <p>{$col['publicText']}</p>
-                       
-                ";
-            }
-            echo $output;
-        }
-            
-        
-         
-        
+        //     $output = 
+        //         "
+        //             <span>{$col['publicUsername']}</span>
+                
 
+        //             <span>{$col['publicTimetext']}</span>
+        //             <p>{$col['publicText']}</p>
+                       
+        //         ";
+        //     }
+        //     echo $output;
+        // }
+            
+        public function getAllMessages(){
+
+            $allMessages = \Models\Messages::usersMessages();
+            $output = '<div >';
+
+                foreach($allMessages as $row){
+
+                
+                $output .= '<p>'.$row['publicText'].' </p>';
+                $output .= '<span>'.$row['publicTimetext'].'</span>';
+                $output .= '<span> '.$row['publicUsername'].' </span>';
+                
+            }
+            $output .= '</div>';
+           echo $output;
+        }
+         
         public function logoutUser(){
 
             \Models\Session::userLogout();

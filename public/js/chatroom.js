@@ -48,26 +48,23 @@ $(document).ready(function(){
     }
     setInterval(function(){
         displayOnlineUsers();
-       }, 5000);
+        displayMessages();
+       }, 1000);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///SE EPEKSERGASIA
     $('#mainchatBtn').click(function(e){
         e.preventDefault();
         var userText = $("#mainchatText").val();
-      
+        resetForm();
         saveData(userText).done(function(data){
         if(data > 0){
-
-            showData(data);
-
+            // showData(data);
         }
-          
         });
-     
-
     });
     function saveData(text){
+         
        
           return $.ajax({
 
@@ -82,27 +79,43 @@ $(document).ready(function(){
         });
 
     }
+  
+    // function showData(userid){
 
-    function showData(userid){
+    //       $.ajax({
+
+    //         url: "getLinesFromDb",
+    //         type: "post",
+    //         data: {
+    //             "userId" : userid
+    //         },success: function(data){
+
+    //             $('#viewChatMessages').html(data);
+                
+    //         }
+
+    //     });
+  
+    //   }
+
+      displayMessages();
+
+      function displayMessages(){
 
           $.ajax({
 
-            url: "getLinesFromDb",
-            type: "post",
-            data: {
+            url: "getAllMessages",
+            success(response){
 
-                "userId" : userid
-            },success: function(data){
-
-                $('#viewChatMessages').html(data);
-                
+                $('#viewChatMessages').html(response);
             }
-
-        });
-  
+          });
       }
-    
+      function resetForm(){
+      
+        document.getElementById("inputText").reset();
+    }
 });
 
-
+ 
 

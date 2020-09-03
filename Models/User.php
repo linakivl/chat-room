@@ -48,6 +48,16 @@
                     $set = \Models\Db::getInstance()->execute($sql);
                     if($set){
                         $_SESSION['username'] = $this->username;
+                           
+                        $userActivity = self::changeUserDetails($_SESSION['id']);
+                        foreach($userActivity as $details){
+
+                            $_SESSION['loginId'] = $details['loginId'];
+                            $_SESSION['timelogin'] = $details['loginUserActivity'];
+                        }      
+                        $status = 1;
+                        self::changeUserStatus($status, $_SESSION['id']);   
+                        
                         return true;
                     }
                     
@@ -144,15 +154,7 @@
                         $_SESSION['id'] = $info['userId'];
                         $_SESSION['key'] = md5(self::$salt . $info['userId']);
 
-                        
-                        $userActivity = self::changeUserDetails($_SESSION['id']);
-                        foreach($userActivity as $details){
-
-                            $_SESSION['loginId'] = $details['loginId'];
-                            $_SESSION['timelogin'] = $details['loginUserActivity'];
-                        }      
-                        $status = 1;
-                        self::changeUserStatus($status, $_SESSION['id']);   
+                     
                     }
                    
                     

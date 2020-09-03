@@ -16,20 +16,34 @@
         }
 
 
-        public static function getLines($lastInsertId){
+        // public static function getLines($lastInsertId){
             
-            if(!$lastInsertId){
+        //     if(!$lastInsertId){
                 
-                return "No messages yet";
-            }
-            $sql = "SELECT publicUsername,publicText,publicTimetext FROM public_chat WHERE publicId = $lastInsertId ";
+        //         return "No messages yet";
+        //     }
+        //     $sql = "SELECT publicUsername,publicText,publicTimetext FROM public_chat WHERE publicId = $lastInsertId ";
             
-            $text = \Models\Db::getInstance()->getResults($sql);
+        //     $text = \Models\Db::getInstance()->getResults($sql);
            
-            return $text;
+        //     return $text;
+        // }
+
+        public static function usersMessages(){
+
+            $sql = "SELECT publicUsername,publicText,publicTimetext FROM  public_chat";
+            $messages = \Models\Db::getInstance()->getResults($sql);
+            $countMessages = count($messages);
+        
+            if($countMessages >= 29){
+              
+                $deleteQuery = "DELETE FROM public_chat ORDER BY publicId ASC LIMIT 10";
+                $deleteResult = \Models\Db::getInstance()->execute($deleteQuery);
+                
+            }
+
+            return $messages;
         }
-
-
 
     }
 
