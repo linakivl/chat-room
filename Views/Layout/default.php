@@ -2,31 +2,22 @@
     include APPROOT . "/Views/Includes/header.php";
    
 ?>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">MVC Todo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </ul>
-    </div>
-</nav>
 
-<main role="main" class="container">
+<main role="main" class="login-container">
 
-    <div class="starter-template">
+    <div class="middle-up">
 
         <?php
         echo $content_for_layout;
         ?>
 
     </div>
-
+    <svg id="stroke" viewBox="0 0 500 50" preserveAspectRatio="xMinYMin meet">
+        <path d="M0,50 L0,4 C95,-23 285,115 500,2 L500,50 L0,50 Z" 
+            style="stroke: none;/*  */">
+        </path>
+    </svg>
 </main>
 
 <?php

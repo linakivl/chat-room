@@ -13,6 +13,10 @@
                 \Models\Redirect::to("authentication/login");
             }
 
+            $this->set([
+                'chatId' => 'global'
+            ]);
+
             $this->layout = "chatroom";
             $this->render("index");
            
@@ -26,6 +30,21 @@
             
         } 
 
+        public function room()
+        {
+            if(!\Models\User::checkTheLogin()){
+
+                \Models\Redirect::to("authentication/login");
+            }
+
+            $this->set([
+                'chatId' => $_POST['userId']
+            ]);
+
+            $this->layout = false;
+            $this->render("room");
+        }
+
         public function onlineUsersStatus(){
 
             $onlineUsers = \Models\User::getOnlineUsers($_SESSION['id']);
@@ -33,17 +52,14 @@
                 echo false;
                 exit();
             }
-            $output = '<ul>';
 
-                foreach($onlineUsers as $row){
-
-                $output .= '
-                    <li> '.$row['userName'].' </li>
-                ';
-            }
-                $output .= '</ul>';
-                echo $output;
+            $this->set([
+                'onlineUsers' => $onlineUsers
+            ]);
             
+            $this->layout = false;
+
+            $this->render("getUsers");
         }
 
         public function sendLineToDb(){
@@ -56,47 +72,41 @@
             }
         }
         
-        // public function getLinesFromDb(){
-
-        //     $text = \Models\Messages::getLines($_POST['userId']);
-        //     foreach($text as $col){
-
-                
-        //     $output = 
-        //         "
-        //             <span>{$col['publicUsername']}</span>
-                
-
-        //             <span>{$col['publicTimetext']}</span>
-        //             <p>{$col['publicText']}</p>
-                       
-        //         ";
-        //     }
-        //     echo $output;
-        // }
-            
-        public function getAllMessages(){
+        public function getAllPublicMessages(){
 
             $allMessages = \Models\Messages::usersMessages();
-            $output = '<div >';
+            $this->set([
+                'allMessages' => $allMessages
+            ]);
+            
+            $this->layout = false;
 
-                foreach($allMessages as $row){
+            $this->render("publicMessages");
+            
+        }     
 
-                
-                $output .= '<p>'.$row['publicText'].' </p>';
-                $output .= '<span>'.$row['publicTimetext'].'</span>';
-                $output .= '<span> '.$row['publicUsername'].' </span>';
-                
-            }
-            $output .= '</div>';
-           echo $output;
+      
+        public function checkNewMsg(){
+
+            $lastMessage = \Models\Messages::getPublicLastMessage($_POST['lastMessageId']); 
+            $this->set([
+                'lastMessage' => $lastMessage
+            ]);
+            
+            $this->layout = false;
+
+            $this->render("newPbMessages");
+        }
+
+        public function getAllRoomMessages(){
+
+            $userAllMessages = \Models\Messages::roomMessages($_POST['chatid'], $_SESSION['id']);
+            //merge two users 
         }
          
         public function logoutUser(){
 
             \Models\Session::userLogout();
         }
-       
-
     }
 ?>

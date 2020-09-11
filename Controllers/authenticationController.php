@@ -125,14 +125,14 @@ class AuthenticationController extends Core\Controller{
             \Models\Redirect::to("chat/index");
        }
 
-        public function logoutUser(){
+    //     public function logoutUser(){
        
-           if(isset($_POST['userLogout'])){
+    //        if(isset($_POST['userLogout'])){
 
-               \Models\Session::userLogout();
-           }
+    //            \Models\Session::userLogout();
+    //        }
 
-       }
+    //    }
 
     }
 ?>

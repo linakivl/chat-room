@@ -86,13 +86,6 @@ $(document).ready(function(){
     }
 
 
-
-
-    function redirectToMain(){
-
-      
-    }
-
     $("#userRegBtn").click(function(e){
         e.preventDefault();
        

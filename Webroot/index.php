@@ -1,7 +1,6 @@
 
 <?php
-
-    define('WEBROOT', str_replace("Webroot/index.php", "", $_SERVER["SCRIPT_NAME"]));
+    define('WEBROOT', str_replace("Webroot/index.php", "", 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']));
     define('ROOT', str_replace("Webroot/index.php", "", $_SERVER["SCRIPT_FILENAME"]));
     define('APPROOT', dirname(dirname(__FILE__))); 
 

@@ -10,7 +10,7 @@ const gulp = require('gulp'),
 cleanCSS = require('gulp-clean-css');
 
 gulp.task('styles', function() {
-    gulp.src('source/scss/login.scss')
+    gulp.src('source/scss/main.scss')
         .pipe(sass({
             indentedSyntax: false,
             outputStyle: 'expanded',
@@ -22,7 +22,7 @@ gulp.task('styles', function() {
             compatibility: 'ie8',
             inline: ['none']
         }))
-        .pipe(gulp.dest('../public/css'))
+        .pipe(gulp.dest('public/js/css'))
         .pipe(browserSync.stream());
 });
 

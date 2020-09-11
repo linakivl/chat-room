@@ -272,7 +272,7 @@
 
         public static function getOnlineUsers($currentUser){
            
-            $sql = "SELECT userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId
+            $sql = "SELECT userId, userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId
             WHERE login_details.status = 1 AND login_details.loginUserId != '{$currentUser}'";
             $onlineUsers = \Models\Db::getInstance()->getResults($sql);
             

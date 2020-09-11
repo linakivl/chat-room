@@ -16,22 +16,19 @@
         }
 
 
-        // public static function getLines($lastInsertId){
+        public static function getPublicLastMessage($lastInsertId){
             
-        //     if(!$lastInsertId){
-                
-        //         return "No messages yet";
-        //     }
-        //     $sql = "SELECT publicUsername,publicText,publicTimetext FROM public_chat WHERE publicId = $lastInsertId ";
+    
+            $sql = "SELECT publicUsername,publicText,publicTimetext FROM public_chat WHERE publicId = $lastInsertId ";
             
-        //     $text = \Models\Db::getInstance()->getResults($sql);
+            $text = \Models\Db::getInstance()->getResults($sql);
            
-        //     return $text;
-        // }
+            return $text;
+        }    
 
         public static function usersMessages(){
 
-            $sql = "SELECT publicUsername,publicText,publicTimetext FROM  public_chat";
+            $sql = "SELECT publicUsername,publicText,publicTimetext FROM  public_chat WHERE date(publicTimetext) = curdate()";
             $messages = \Models\Db::getInstance()->getResults($sql);
             $countMessages = count($messages);
         
@@ -45,7 +42,9 @@
             return $messages;
         }
 
+        public static function roomMessages($chatId){
+
+            ////////////////////////////////////////////////////////////
+        }
     }
-
-
 ?>

@@ -2,9 +2,9 @@
     include APPROOT . "/Views/Includes/header.php";
    
 ?>
-<main role="main" class="container">
+<main  class="container-chat">
 
-    <div class="starter-template">
+    <div class="container-chat_box">
 
         <?php
         echo $content_for_layout;
