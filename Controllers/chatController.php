@@ -37,8 +37,11 @@
                 \Models\Redirect::to("authentication/login");
             }
 
+         
+
             $this->set([
-                'chatId' => $_POST['userId']
+                'chatId' => $_POST['userChatId'],
+          
             ]);
 
             $this->layout = false;
@@ -88,20 +91,28 @@
       
         public function checkNewMsg(){
 
-            $lastMessage = \Models\Messages::getPublicLastMessage($_POST['lastMessageId']); 
-            $this->set([
-                'lastMessage' => $lastMessage
-            ]);
+            $lastMessage = \Models\Messages::getPublicLastMessage($_POST['lastMessageId']);
+         
+                $this->set([
+                    'lastMessage' => $lastMessage
+                ]);
+                
+                $this->layout = false;
+    
+                $this->render("newPbMessages");
             
-            $this->layout = false;
-
-            $this->render("newPbMessages");
+           
         }
 
         public function getAllRoomMessages(){
-
-            $userAllMessages = \Models\Messages::roomMessages($_POST['chatid'], $_SESSION['id']);
-            //merge two users 
+            $username = \Models\User::getUsername($_POST['chaUserId']);
+            $usersAllMessages = \Models\Messages::roomMessages($_POST['chaUserId'], $_SESSION['id']);
+            $this->set([
+                'usersAllMessages' => $usersAllMessages,
+                'username' => $username  
+            ]);
+            $this->layout = false;
+            $this->render("roomMessages");
         }
          
         public function logoutUser(){

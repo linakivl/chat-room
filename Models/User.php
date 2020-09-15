@@ -279,6 +279,14 @@
             return $onlineUsers;
 
         }
+
+
+        public static function getUsername($userChatId){
+            $sql = "SELECT userName FROM users WHERE  userId = $userChatId";
+            $chatUsername = \Models\Db::getInstance()->getResults($sql);
+
+            return $chatUsername;
+        }
        
         public function setPass($pass){
         

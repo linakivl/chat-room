@@ -42,9 +42,13 @@
             return $messages;
         }
 
-        public static function roomMessages($chatId){
+        public static function roomMessages($chatUserId, $userId){
 
-            ////////////////////////////////////////////////////////////
+           $sql = "SELECT * FROM private_chat WHERE toUserId = $chatUserId AND
+            fromUserId = $userId OR toUserId = $userId AND fromUserId = $chatUserId 
+            ORDER BY privateTextTime DESC";
+           $result = \Models\Db::getInstance()->getResults($sql);
+           return $result;
         }
     }
 ?>

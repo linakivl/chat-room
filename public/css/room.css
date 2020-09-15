@@ -1,0 +1,79 @@
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  margin: 2.5rem;
+}
+
+.chat-box_name::before {
+  content: '';
+  display: inline-block;
+  width: 7.5px;
+  height: 7.5px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 50%;
+  background-color: #6feb3e;
+  margin-right: .5rem;
+}
+
+.chat-box ul {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+.chat-box ul li {
+  display: flex;
+  overflow: hidden;
+}
+
+.chat-box ul li .text-field {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.705);
+  border-radius: 10%;
+}
+
+.chat-box ul .current-user {
+  align-self: flex-end;
+  margin-bottom: .5rem;
+}
+
+.chat-box ul .current-user p {
+  padding: 1rem;
+  background-color: #6495ED;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.chat-box ul .other-user {
+  align-self: flex-start;
+  margin-bottom: .5rem;
+}
+
+.chat-box ul .other-user p {
+  padding: 1rem;
+  background-color: #eeeeee;
+  font-size: 1.5rem;
+}
+
+.chat-box-input {
+  display: flex;
+  padding-top: 1rem;
+}
+
+.chat-box-input form {
+  display: flex;
+  width: 100%;
+}
+
+.chat-box-input form input[type=text] {
+  flex: 3;
+  padding: .7rem;
+  font-size: 1rem;
+}
+
+.chat-box-input form input[type=submit] {
+  flex: 1;
+  padding: .7rem;
+  font-size: 1rem;
+}
