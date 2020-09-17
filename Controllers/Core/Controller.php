@@ -1,12 +1,5 @@
 <?php
 
-//The set() method is going to merge all the data that we want to pass to the view.
-
-//The render() method is going to import the data with the method extract and then 
-//load the layout requested in the Views directory. Moreover, this allows us to have a 
-//layout in order to avoid the stupid repetition of HTML in our views.
-
-//needlogin poious controller theloume na vlepoume xwris na eisai login 
     namespace Controllers\Core;
 
     class Controller{

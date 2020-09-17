@@ -3,6 +3,8 @@
 </div>
 <ul>
     <?php foreach($onlineUsers as $row){ ?>
-        <li data-tasks-id='<?php echo $row['userId'] ?>' class="online-user"> <?php echo $row['userName'] ?> </li>
+        <li class="online-user"><a href="<?php echo WEBROOT . 'room/privateChat/' .$row['userId'];  ?>" data-tasks-id='<?php echo $row['userId'] ?>'">
+            <?php echo $row['userName'] ?></a>  
+        </li>
     <?php } ?>
-</ul>
+</ul> 

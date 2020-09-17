@@ -1,11 +1,10 @@
 $(document).ready(function(){
     var lastMsgId = null;
     var chatId = $('#chat-window').data('chat-id');
-    var newMsg = null;
+    var lastMsgRoomId = null; 
 
     displayOnlineUsers();  
-    displayMessages();
-    timeout();
+    checkForNewMsg();
 
  
     $("#logOutBtn").click(function(e){
@@ -36,44 +35,28 @@ $(document).ready(function(){
     
     });
    
-    function checkForNewMsg(){
-        
-        if(lastMsgId){
-            $.ajax({
-                url: global_var.siteUrl + "chat/checkNewMsg",
-                type: "post",
-                data: {
-                    "lastMessageId" : lastMsgId
-                },
-                success: function(response){
+    function checkForNewMsg(){        
+        $.ajax({
+            url: global_var.siteUrl + "chat/checkNewMsg",
+            type: "post",
+            dataType: 'json',
+            data: {
+                "lastMessageId" : lastMsgId
+            },
+            success: function(response){
+                if (response.status) {
+
                     console.log(response);
-                    if (response) {
-                    
-                        $(".chatMessages").append(response);
-                        newMsg = response;
-                    } 
-                }
-            });
-        }
+                
+                    $("#container-chatMessages_box").append(response.msgs);
+                    lastMsgId = response.lastId
+                    $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
+                } 
+            }
+        });
     }
 
-    function timeout(){
-    //    if(newMsg){
-         
-    //     $.ajax({
-    //         url: global_var.siteUrl + "chat/checkNewMsg",
-    //         type: "post",
-    //         data: {
-    //             "lastMessageId" : lastMsgId
-    //         },
-    //         success: function(response){
-    //             console.log(response);
-    //             $(".newMsg").html(response);
-    //         }
-    //    });
-    // }
-    
-}
+
     function displayOnlineUsers(){
     
         $.ajax({
@@ -91,7 +74,7 @@ $(document).ready(function(){
     }
     setInterval(function(){
         displayOnlineUsers();
-        timeout();
+        checkForNewMsg();
       
        }, 5000);
 
@@ -107,6 +90,7 @@ $(document).ready(function(){
         }
         });
     });
+
     function saveData(text){
          
        
@@ -120,9 +104,7 @@ $(document).ready(function(){
                 "sendText" : text
             },
             success: function(response){
-                lastMsgId = response;
-                checkForNewMsg();
-              
+                checkForNewMsg();              
             }
         });
     }
@@ -130,66 +112,64 @@ $(document).ready(function(){
       function displayMessages(){
           if(Number.isInteger(chatId)){
 
-            displayPrivateMsgs(chatId);
+            checkNewPrivateMsg(chatId);
 
           }else{
-
-            displayPublicMsgs();
+            checkForNewMsg();     
           }
       }
 
-      function displayPublicMsgs(){
-
-           $.ajax({
-            
-            url: global_var.siteUrl + "chat/getAllPublicMessages",
-            success(response){
-                //this line of code force the user to not scroll up/ 
-                $('#container-chatMessages_box').html(response);
-                $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
-            }
-          });
-      }
-      function displayPrivateMsgs(chatId){
-
-           
-            console.log(chatId);
+      function checkNewPrivateMsg(chatId){
+            console.log(lastMsgRoomId);
             $.ajax({
-                url: global_var.siteUrl + "chat/getAllRoomMessages",
+                url: global_var.siteUrl + "chat/getPrivateMsgs",
                 type: "post",
+                dataType: 'json',
                 data: {
-                    "chaUserId": chatId
+                    "chatUserId": chatId,
+                    "lastMsgRoomId" : lastMsgRoomId
+
                 },success(response){
-                   $(".chat-box").html(response);
+                    if (response.status) {
+                
+                    $(".chat-box").append(response.msgs);
+                    lastMsgId = response.lastId
+                    $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
+                    } 
+                 
                 }
             });
-
       }
 
-      function resetForm(){
-      
-        document.getElementById("inputText").reset();
-    }
+   
 
     $('body').on('click', '.online-user', function(e){
 
         var userId = $(e.currentTarget).data('tasks-id');
         chatId = userId;
-      
+        console.log(chatId);
         $.ajax({
 
-            url : global_var.siteUrl + "chat/room",
+            url : global_var.siteUrl + "chat/redirectToChat",
             type: "post",
             data: {
-                "userChatId": userId
-            },success(response){
+
+                "userChatId": chatId
+
+            },success: function(response){
                 
-                $('.container-chat_box').html(response);
-                displayPrivateMsgs(chatId);
+            //    location.reload();
             }   
 
         });
     });
+
+
+    function resetForm(){
+
+        document.getElementById("inputText").reset();
+
+    }
 });
 
 

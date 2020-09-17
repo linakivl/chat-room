@@ -153,11 +153,13 @@ li {
   display: flex;
   flex-direction: column;
   flex: 2;
+  justify-content: flex-end;
 }
 
 .container-chat_box #container-chatMessages_box {
   display: flex;
   overflow: scroll;
+  flex-direction: column;
 }
 
 .container-chat_box #container-chatMessages_box .chatMessages p, .container-chat_box #container-chatMessages_box .chatMessages span {
@@ -165,12 +167,14 @@ li {
   font-weight: bolder;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   line-height: 1.5;
+  
 }
 
 .container-chat_box #inputText {
   display: flex;
   align-self: center;
   width: 100%;
+  align-items: flex-end;
 }
 
 .container-chat_box #inputText input[type="text"] {

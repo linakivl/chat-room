@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   margin: 2.5rem;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .chat-box_name::before {
@@ -61,19 +63,18 @@
   padding-top: 1rem;
 }
 
-.chat-box-input form {
-  display: flex;
-  width: 100%;
-}
 
-.chat-box-input form input[type=text] {
+
+.chat-box-input  input[type=text] {
   flex: 3;
   padding: .7rem;
   font-size: 1rem;
 }
 
-.chat-box-input form input[type=submit] {
+.chat-box-input input[type=submit] {
   flex: 1;
   padding: .7rem;
   font-size: 1rem;
+  width: 100px;
+  max-width: 200px;
 }
