@@ -36,7 +36,7 @@
 }
 
 .chat-box ul .current-user {
-  align-self: flex-end;
+  align-self: flex-start;
   margin-bottom: .5rem;
 }
 
@@ -48,8 +48,10 @@
 }
 
 .chat-box ul .other-user {
-  align-self: flex-start;
+
+  align-self: flex-end;
   margin-bottom: .5rem;
+  
 }
 
 .chat-box ul .other-user p {
@@ -63,7 +65,12 @@
   padding-top: 1rem;
 }
 
+#roomInputForm{
+  
+  display: flex;
+  width: 100%;
 
+}
 
 .chat-box-input  input[type=text] {
   flex: 3;

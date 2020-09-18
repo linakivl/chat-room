@@ -32,14 +32,7 @@ class ChatController extends Core\Controller{
             return $changeStatus;
             
         } 
-        public function redirectToChat(){
-       
-            // $_SESSION['userChatId'] = $_POST['userChatId'];
-            // var_dump($_SESSION['userChatId']);
-            // exit();
-            \Models\Redirect::to("room/roomIndex");
-       }
-      
+     
 
         // public function room()
         // {
@@ -78,12 +71,10 @@ class ChatController extends Core\Controller{
 
         public function sendLineToDb(){
 
-            if($_POST['action'] == "sendLineToDb"){
-
-                $result = \Models\Messages::setLines($_SESSION['username'], $_POST['sendText']);
+             $result = \Models\Messages::setLines($_SESSION['username'], $_POST['sendText']);
                 
-                echo $result;
-            }
+             return $result;
+            
         }
 
       
@@ -128,41 +119,6 @@ class ChatController extends Core\Controller{
         //     $this->layout = false;
         //     $this->render("roomMessages");
         // }
-         
-        // public function getPrivateMsgs(){
-
-        //     $lastMsgRoomId = filter_var($_POST['lastMsgRoomId'], FILTER_SANITIZE_NUMBER_INT);
-        //     if (empty($lastMsgRoomId)) $lastMsgRoomId = 0;
-
-        //     $lastPrivateMessage = \Models\Messages::roomMessages($_POST['chatUserId'],$_SESSION['id'],$lastMsgRoomId);
-         
-        //         if (!$lastPrivateMessage) {
-        //             echo json_encode([
-        //                 'status' => false
-        //             ]);
-        //             exit;
-        //         }
-
-        //         $this->set([
-        //             'lastPrivateMessage' => $lastPrivateMessage
-        //         ]);
-                
-        //         $this->layout = false;
-                
-        //         ob_start();
-        //         $this->render("roomMessages");
-        //         $msgs = ob_get_clean(); 
-           
-        //         echo json_encode([
-        //             'status' => true,
-        //             'msgs' => $msgs,
-        //             'lastId' => end($lastPrivateMessage)['privateId']
-        //         ]);
-        // }
-    
-
-
-     
 
         public function logoutUser(){
 

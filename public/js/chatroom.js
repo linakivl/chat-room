@@ -1,7 +1,6 @@
 $(document).ready(function(){
     var lastMsgId = null;
     var chatId = $('#chat-window').data('chat-id');
-    var lastMsgRoomId = null; 
 
     displayOnlineUsers();  
     checkForNewMsg();
@@ -84,23 +83,17 @@ $(document).ready(function(){
         e.preventDefault();
         var userText = $("#mainchatText").val();
         resetForm();
-        saveData(userText).done(function(data){
-        if(data > 0){
-            // showData(data);
-        }
-        });
+        saveData(userText);
     });
 
     function saveData(text){
          
-       
-          return $.ajax({
+          $.ajax({
 
             url: global_var.siteUrl + "chat/sendLineToDb",
             type: "post",
             data: {
 
-                "action" : "sendLineToDb",
                 "sendText" : text
             },
             success: function(response){
@@ -118,52 +111,6 @@ $(document).ready(function(){
             checkForNewMsg();     
           }
       }
-
-      function checkNewPrivateMsg(chatId){
-            console.log(lastMsgRoomId);
-            $.ajax({
-                url: global_var.siteUrl + "chat/getPrivateMsgs",
-                type: "post",
-                dataType: 'json',
-                data: {
-                    "chatUserId": chatId,
-                    "lastMsgRoomId" : lastMsgRoomId
-
-                },success(response){
-                    if (response.status) {
-                
-                    $(".chat-box").append(response.msgs);
-                    lastMsgId = response.lastId
-                    $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
-                    } 
-                 
-                }
-            });
-      }
-
-   
-
-    $('body').on('click', '.online-user', function(e){
-
-        var userId = $(e.currentTarget).data('tasks-id');
-        chatId = userId;
-        console.log(chatId);
-        $.ajax({
-
-            url : global_var.siteUrl + "chat/redirectToChat",
-            type: "post",
-            data: {
-
-                "userChatId": chatId
-
-            },success: function(response){
-                
-            //    location.reload();
-            }   
-
-        });
-    });
-
 
     function resetForm(){
 

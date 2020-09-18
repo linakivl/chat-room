@@ -4,8 +4,8 @@
 ?>
 <main  class="container-chat">
 
-    <div class="container-chat_box">
-
+    <div class="container-chat_box" id="private-room">
+        
         <?php
         echo $content_for_layout;
         ?>

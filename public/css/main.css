@@ -7,7 +7,9 @@
 body {
   overflow: hidden;
 }
-
+a{
+  text-decoration: none;
+}
 li {
   list-style: none;
 }
@@ -158,8 +160,10 @@ li {
 
 .container-chat_box #container-chatMessages_box {
   display: flex;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   flex-direction: column;
+  padding-left: .5rem;
 }
 
 .container-chat_box #container-chatMessages_box .chatMessages p, .container-chat_box #container-chatMessages_box .chatMessages span {
