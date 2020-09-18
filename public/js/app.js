@@ -1,7 +1,5 @@
 $(document).ready(function(){
    
-  
-
     $("#userLoginBtn").click(function(e){
         e.preventDefault();
         var logEmail = $("#logEmail").val();
@@ -13,7 +11,6 @@ $(document).ready(function(){
             type: 'post',
             dataType: "json",
             data: {
-                'action': 'login-task',
                 'userEmail': logEmail,
                 'userPass': logPass
             },
@@ -35,7 +32,7 @@ $(document).ready(function(){
         e.preventDefault();
        
         validateUsername();
-            // validateUsername().done(function(data){});
+         
     });
 
 
@@ -51,22 +48,11 @@ $(document).ready(function(){
             data: {
                 "newUsername": username
             }, success: function(data){
-
-                
-                if($.isNumeric(data)){
-                    $.ajax({
-
-                        url: "redirectToChat",
-                         success: function(data){
-                            $('#usernameError').html("");
-                            location.reload();
-                        }
-                    });
-                   
-                }else{
-                    $('#usernameError').html(data);
+                if(data.status){
+                    $('#usernameError').html("");
+                    location.reload();
                 }
-              
+                $('#usernameError').html(data);
             }
         });
     }
@@ -75,7 +61,7 @@ $(document).ready(function(){
     function checkUsername(username){
 
         
-        if(username.length <= 4 || username.value === "" || /[^A-Za-z\d]/.test(username)){
+        if(username.length <= 3 || username.value === "" || /[^A-Za-z\d]/.test(username)){
             
             document.getElementById("usernameError").innerHTML = "Your username must contain at least 4 characters";
             return false;
@@ -86,8 +72,8 @@ $(document).ready(function(){
     }
 
 
-    $("#userRegBtn").click(function(e){
-        e.preventDefault();
+    $("#userRegBtn").click(function(){
+        
        
         var regName = $("#regName").val();
         var regEmail = $("#regEmail").val();
@@ -105,19 +91,12 @@ $(document).ready(function(){
                 'userPass' : regPass
             },
             success : function(data){
-
-                $('#regError').html(data);
-               
-                if($.isNumeric(data)){
-                    $('#regError').html("");
-                    $.ajax({
-
-                        url: "redirectToChat",
-                         success: function(data){
-                            location.reload();
-                        }
-                });
-              }
+                
+                if(data.status){
+                    console.log(data);
+                    location.reload();
+                }
+            //   $('#regError').html(data);
              
             }
         });

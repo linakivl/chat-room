@@ -59,11 +59,13 @@
                 $result = \Models\Db::getInstance()->getResults($sql);
 
                 return $result;
+                exit();
             }  
 
-            $sql = "SELECT * FROM private_chat WHERE privateId > $lastInsertId AND toUserId = $chatUserId AND
+            $sql = "SELECT * FROM private_chat WHERE  toUserId = $chatUserId AND
             fromUserId = $userId OR toUserId = $userId AND fromUserId = $chatUserId 
             ORDER BY privateTextTime ASC";
+            
 
            $result = \Models\Db::getInstance()->getResults($sql);
           

@@ -1,5 +1,5 @@
 <h3 class="chat-window-username"><?php foreach ($username as $key) { echo $key['userName'];}?></h3>
-<div id="chat-window" style= "display: flex;" class="container-chat_box_roomwindow " data-chat-id="<?php echo $chatId; ?>">
+<div id="chat-window"  class="container-chat_box_window " data-chat-id="<?php echo $chatId; ?>">
     <div class="chat-box">
         <div class="chat-box_wrapper" style="height: 700px; overflow-y: scroll;
         overflow-x: hidden; padding: .5rem;">

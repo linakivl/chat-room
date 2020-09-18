@@ -42,7 +42,7 @@
             
             if (empty($lastMsgRoomId)) $lastMsgRoomId = 0;
 
-            $lastPrivateMessage = \Models\Messages::getPrivateLastMessage($_POST['chatUserId'],$_SESSION['id'],$lastMsgRoomId);
+            $lastPrivateMessage = \Models\Messages::getPrivateLastMessage($_POST['chatUserId'],$_SESSION['id'],$_POST['lastMsgRoomId']);
             
                 if (!$lastPrivateMessage) {
                     echo json_encode([

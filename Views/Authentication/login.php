@@ -6,7 +6,8 @@
         <p id="logError"></p>
         <div class="setUsernameBox" style="display:none">Set your username: 
             <input type="text" id="usernameInput">
-            <input type="submit" id="setUsernameBtn" value="Login">
+            <a href="<?php echo WEBROOT . 'chat/index'?> ">
+            <input type="submit" id="setUsernameBtn" value="Login"></a>
             <p id="usernameError"></p>
         </div>
         <a href="<?php echo WEBROOT . 'authentication/register'?>">Register</a>

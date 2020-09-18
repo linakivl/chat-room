@@ -21,13 +21,10 @@
             $userEntity = \Models\Db::getInstance()->getResults($sql);
            
             foreach($userEntity as $user){
-                foreach($user as $name){
-                    $string = strcmp($username, $name);
-                    if($string == 0){
-                        
-                        return "false";
-                        exit();
-                    }
+                    
+                if(strcmp($user['userName'],$username)){
+                    $this->username = null;
+                    
                 }
             }
            
@@ -39,8 +36,7 @@
 
         public function save(){
             
-            if($this->id){
-                
+            if($this->id && $this->username){
                 //update user
                 $sql = "UPDATE users SET userName = '{$this->username}'  WHERE userId = '{$this->id}'";
               
@@ -65,12 +61,11 @@
                     return false;
                 }
                 
-            }else{
+            }
+            if( $this->username && $this->password){
               
-               
-                
                 $sql = "INSERT INTO users (userName, userEmail, userPassword) VALUES ('{$this->username}', '{$this->email}', '{$this->password}')";
-              
+                
                 try{
 
                     Db::getInstance()->execute($sql);
@@ -82,6 +77,7 @@
                 }
 
             }
+            return false;
 
         }
         public static function changeUserDetails($userId){
@@ -236,13 +232,15 @@
                 }
             }
             
-          
             try{
 
                 $this->username = $username;
                 $this->email = $email;
                 $this->setPass($pass);
+                
                 $id = $this->save();
+                
+                   
                 if($id){
 
                     $this->userLoginId = self::changeUserDetails($id);
@@ -297,7 +295,7 @@
         public static function checkChars($value){
             
             $value = trim($value);
-            if(strlen($value) < 4){
+            if(strlen($value) < 3){
                 
                 return false;
             }
@@ -312,8 +310,6 @@
 
             }
 
-           
-            
             return $username;
         }
 
