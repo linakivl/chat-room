@@ -32,25 +32,6 @@ class ChatController extends Core\Controller{
             return $changeStatus;
             
         } 
-     
-
-        // public function room()
-        // {
-        //     if(!\Models\User::checkTheLogin()){
-
-        //         \Models\Redirect::to("authentication/login");
-        //     }
-
-        //     $this->set([
-
-        //         'chatId' => $_POST['userChatId'],
-          
-        //     ]);
-
-        //     $this->layout = false;
-        //     $this->render("room");
-
-        // }
 
         public function onlineUsersStatus(){
 
@@ -109,16 +90,25 @@ class ChatController extends Core\Controller{
                 ]);
         }
 
-        // public function getAllRoomMessages(){
-        //     $username = \Models\User::getUsername($_POST['chaUserId']);
-        //     $usersAllMessages = \Models\Messages::roomMessages($_POST['chaUserId'], $_SESSION['id']);
-        //     $this->set([
-        //         'usersAllMessages' => $usersAllMessages,
-        //         'username' => $username  
-        //     ]);
-        //     $this->layout = false;
-        //     $this->render("roomMessages");
-        // }
+        
+        public function unOpenedChatsController(){
+
+            $unopendedChats = \Models\Messages::getUnreadMsgs($_SESSION['id']);
+
+            $this->set([
+                'users' => $unopendedChats
+            ]);
+            $this->layout = false;
+
+            ob_start();
+                $this->render("appendChats");
+                $chats = ob_get_clean(); 
+
+            echo json_encode([
+                'status' => true,
+                'chats' => $chats
+            ]);
+        }
 
         public function logoutUser(){
 

@@ -23,21 +23,7 @@ $(document).ready(function () {
         checkNewPrivateMsg();
       }
     });
-  } // function appendOnlineChats(){
-  //     $.ajax({
-  //         url:  global_var.siteUrl + "room/appendChatsController",
-  //         type: "post",
-  //         dataType: 'json',
-  //         data:{
-  //             "lastIdMsg": $lastId
-  //         },success: function(response){
-  //             if(response.status){
-  //                 $(".chat-box-chatlist").append(response.username);
-  //             }
-  //         }
-  //     });
-  // }
-
+  }
 
   function checkNewPrivateMsg() {
     $.ajax({
@@ -64,5 +50,6 @@ $(document).ready(function () {
 
   function resetInput() {
     document.getElementById("roomInputForm").reset();
-  }
+  } //  var chatId = window.location.pathname.split("/").pop();
+
 });

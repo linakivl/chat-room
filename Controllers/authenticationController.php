@@ -103,11 +103,16 @@ class AuthenticationController extends Core\Controller{
                     
                     if(is_string($login)){
 
-                        echo json_encode($login, JSON_PRETTY_PRINT);
-    
+                       $this->set([
+                           'message' => $login
+                       ]); 
+
+                        echo json_encode([
+                            'status' => false,
+                            'errorMsg'=> $login]);
                         exit();
                     }
-            
+                    
                     echo json_encode([
                         'status' => true
                     ]);

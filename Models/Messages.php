@@ -5,6 +5,7 @@
     class Messages{
 
 
+       
         public static function retrieveUsername($chatUserId){
 
             $sql = "SELECT userName FROM users WHERE userId = $chatUserId";
@@ -41,9 +42,10 @@
             return $text;
         }    
 
-        public static function setNewPrivateMsg($userid, $chatUserId , $text){
+        public static function setNewPrivateMsg( $chatUserId, $userid, $text){
 
-            $sql = "INSERT INTO private_chat (toUserId,fromUserId,privateText) VALUES ($userid, $chatUserId, '{$text}')";
+            $sql = "INSERT INTO private_chat (toUserId,fromUserId,privateText) VALUES ( $chatUserId, $userid, '{$text}')";
+           
             $result = \Models\Db::getInstance()->execute($sql);
             $result = \Models\Db::getInstance()->getLastInsert();
             var_dump($result);
@@ -80,8 +82,33 @@
            return $result;
         }
 
-        public static function appendChats($lastMsgId){
+        public static function getUnreadMsgs($userId){
 
+            $sql = "SELECT  private_chat.status, private_chat.fromUserId , users.userName 
+            FROM private_chat INNER JOIN users ON private_chat.fromUserId = users.userId
+            WHERE toUserId = $userId AND status = 1";
+            $result = \Models\Db::getInstance()->getResults($sql);
+            $ids = [];
+            $userNames = [];
+            
+                foreach($result as $key => $val){
+
+                    array_push($ids, $val['fromUserId']);
+                    array_push($userNames, $val['userName']);
+                    
+                }
+                $ids = array_unique($ids);
+                $userNames = array_unique($userNames);
+                $combine = array_combine($ids, $userNames);
+ 
+                return $combine;
+                
+        }
+        public static function changePrivateMsgStatus($currentUser,$chatId){
+
+            $sql = "UPDATE private_chat SET status = 0  WHERE fromUserId = $chatId AND toUserId = $currentUser";
+            $result = \Models\Db::getInstance()->execute($sql);
+          
         }
     }
 ?>

@@ -10,6 +10,7 @@
         public function privateChat($chatId){
 
             $username = $this->getRecieverUsername($chatId);
+            $this->changePrivateStatusController($_SESSION['id'],$chatId);
 
             $this->set([
                 'chatId' => $chatId,
@@ -21,6 +22,11 @@
 
         }
 
+        public function changePrivateStatusController($currentUser,$chatId){
+
+            $changeStatus = \Models\Messages::changePrivateMsgStatus($currentUser,$chatId);
+
+        }
         public function getRecieverUsername($chatId){
 
             $username = \Models\Messages::retrieveUsername($chatId);
@@ -31,7 +37,7 @@
 
         public function savePrivateText(){
 
-            $result = \Models\Messages::setNewPrivateMsg($_SESSION['id'], $_POST['chatRoomId'], $_POST['userText']);
+            $result = \Models\Messages::setNewPrivateMsg( $_POST['chatRoomId'],$_SESSION['id'], $_POST['userText']);
 
             return $result;
         }

@@ -4,6 +4,7 @@ $(document).ready(function(){
 
     displayOnlineUsers();  
     checkForNewMsg();
+    displayUnopenedChats();
 
  
     $("#logOutBtn").click(function(e){
@@ -74,7 +75,7 @@ $(document).ready(function(){
     setInterval(function(){
         displayOnlineUsers();
         checkForNewMsg();
-      
+        displayUnopenedChats();
        }, 5000);
 
    
@@ -101,16 +102,24 @@ $(document).ready(function(){
             }
         });
     }
+    function displayUnopenedChats(){
 
-      function displayMessages(){
-          if(Number.isInteger(chatId)){
+        $.ajax({
 
-            checkNewPrivateMsg(chatId);
+            url: global_var.siteUrl + "chat/unOpenedChatsController",
+            dataType: "json",
+            success: function(data){
+                if (data.status) {
 
-          }else{
-            checkForNewMsg();     
-          }
-      }
+                    console.log(data.chats);
+                
+                    $("#newMessagesBox").html(data.chats);
+                }
+            }
+
+        });
+
+    }
 
     function resetForm(){
 

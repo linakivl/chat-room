@@ -3,10 +3,9 @@
 $(document).ready(function () {
   var lastMsgId = null;
   var chatId = $('#chat-window').data('chat-id');
-  var newMsg = null;
   displayOnlineUsers();
-  displayMessages();
-  timeout();
+  checkForNewMsg();
+  displayUnopenedChats();
   $("#logOutBtn").click(function (e) {
     console.log("he");
     e.preventDefault();
@@ -29,38 +28,22 @@ $(document).ready(function () {
   });
 
   function checkForNewMsg() {
-    if (lastMsgId) {
-      $.ajax({
-        url: global_var.siteUrl + "chat/checkNewMsg",
-        type: "post",
-        data: {
-          "lastMessageId": lastMsgId
-        },
-        success: function success(response) {
+    $.ajax({
+      url: global_var.siteUrl + "chat/checkNewMsg",
+      type: "post",
+      dataType: 'json',
+      data: {
+        "lastMessageId": lastMsgId
+      },
+      success: function success(response) {
+        if (response.status) {
           console.log(response);
-
-          if (response) {
-            $(".chatMessages").append(response);
-            newMsg = response;
-          }
+          $("#container-chatMessages_box").append(response.msgs);
+          lastMsgId = response.lastId;
+          $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
         }
-      });
-    }
-  }
-
-  function timeout() {//    if(newMsg){
-    //     $.ajax({
-    //         url: global_var.siteUrl + "chat/checkNewMsg",
-    //         type: "post",
-    //         data: {
-    //             "lastMessageId" : lastMsgId
-    //         },
-    //         success: function(response){
-    //             console.log(response);
-    //             $(".newMsg").html(response);
-    //         }
-    //    });
-    // }
+      }
+    });
   }
 
   function displayOnlineUsers() {
@@ -78,62 +61,38 @@ $(document).ready(function () {
 
   setInterval(function () {
     displayOnlineUsers();
-    timeout();
+    checkForNewMsg();
+    displayUnopenedChats();
   }, 5000);
   $('#mainchatBtn').click(function (e) {
     e.preventDefault();
     var userText = $("#mainchatText").val();
     resetForm();
-    saveData(userText).done(function (data) {
-      if (data > 0) {// showData(data);
-      }
-    });
+    saveData(userText);
   });
 
   function saveData(text) {
-    return $.ajax({
+    $.ajax({
       url: global_var.siteUrl + "chat/sendLineToDb",
       type: "post",
       data: {
-        "action": "sendLineToDb",
         "sendText": text
       },
       success: function success(response) {
-        lastMsgId = response;
         checkForNewMsg();
       }
     });
   }
 
-  function displayMessages() {
-    if (Number.isInteger(chatId)) {
-      displayPrivateMsgs(chatId);
-    } else {
-      displayPublicMsgs();
-    }
-  }
-
-  function displayPublicMsgs() {
+  function displayUnopenedChats() {
     $.ajax({
-      url: global_var.siteUrl + "chat/getAllPublicMessages",
-      success: function success(response) {
-        //this line of code force the user to not scroll up/ 
-        $('#container-chatMessages_box').html(response);
-        $('#container-chatMessages_box').scrollTop($('#container-chatMessages_box')[0].scrollHeight);
-      }
-    });
-  }
-
-  function displayPrivateMsgs(chatId) {
-    console.log(chatId);
-    $.ajax({
-      url: global_var.siteUrl + "chat/getAllRoomMessages",
-      type: "post",
-      data: {
-        "chaUserId": chatId
-      },
-      success: function success(response) {
-        $(".chat-box").html(response);
+      url: global_var.siteUrl + "chat/unOpenedChatsController",
+      dataType: "json",
+      success: function success(data) {
+        if (data.status) {
+          console.log(data.chats);
+          $("#newMessagesBox").html(data.chats);
+        }
       }
     });
   }
@@ -141,20 +100,4 @@ $(document).ready(function () {
   function resetForm() {
     document.getElementById("inputText").reset();
   }
-
-  $('body').on('click', '.online-user', function (e) {
-    var userId = $(e.currentTarget).data('tasks-id');
-    chatId = userId;
-    $.ajax({
-      url: global_var.siteUrl + "chat/room",
-      type: "post",
-      data: {
-        "userChatId": userId
-      },
-      success: function success(response) {
-        $('.container-chat_box').html(response);
-        displayPrivateMsgs(chatId);
-      }
-    });
-  });
 });

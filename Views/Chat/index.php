@@ -16,7 +16,8 @@
             </div>
         
         <div class="window-sidebar-right">
-            <div id="activeUserBox"></div>
+            <div id="activeUserBox" class="window-sidebar-right_users"></div>
+            <div id="newMessagesBox" class="window-sidebar-right_chats"></div>
         </div>
     </div>
     

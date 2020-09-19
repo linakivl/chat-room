@@ -72,17 +72,26 @@ $(document).ready(function(){
     }
 
 
-    $("#userRegBtn").click(function(){
+    $("#userRegBtn").click(function(e){
+        e.preventDefault();
+       
+        registerNewUser();
+         
+    });
+
+
+       function registerNewUser(){
         
        
         var regName = $("#regName").val();
         var regEmail = $("#regEmail").val();
         var regPass = $("#regPass").val();
         
-        $.ajax({
+        return  $.ajax({
 
             url : "registerUser",
             type : 'post',
+            dataType: "json",
             data : {
 
                 'action' : 'register-task',
@@ -91,16 +100,18 @@ $(document).ready(function(){
                 'userPass' : regPass
             },
             success : function(data){
-                
-                if(data.status){
-                    console.log(data);
+                if(data.status == false){
+                    $('#regError').html(data.errorMsg);
+                }
+                if(data.status == true){
+                 
                     location.reload();
                 }
-            //   $('#regError').html(data);
+            
              
             }
         });
-    });
+    }
 
 });
 
