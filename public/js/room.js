@@ -1,10 +1,12 @@
 $(document).ready(function(){
 
     var chatRoomId = $("#chat-window").data("chat-id");
-    var lastMsgRoomId = null;
+    var lastMsgRoomId = 0;
     
     
     checkNewPrivateMsg();
+    updateUserLoginStatus();
+    displayNewMsgsRooms();
 
     $('#privateRoomBtn').click(function(e){
 
@@ -47,7 +49,6 @@ $(document).ready(function(){
             },success(response){
                
                 if (response.status) {
-                    
                     $(".chat-box_wrapper").append(response.messages);
                     lastMsgRoomId = response.lastId;
                     $('.chat-box_wrapper').scrollTop($('.chat-box_wrapper')[0].scrollHeight);
@@ -59,6 +60,8 @@ $(document).ready(function(){
     setInterval(function(){
         
         checkNewPrivateMsg();
+        updateUserLoginStatus();
+        displayNewMsgsRooms();
       
     }, 5000);
 
@@ -67,8 +70,34 @@ $(document).ready(function(){
         document.getElementById("roomInputForm").reset();
     }    
 
-    //  var chatId = window.location.pathname.split("/").pop();
-    
+    function updateUserLoginStatus(){
+        
+        $.ajax({
+
+            url: global_var.siteUrl + "chat/updateUsersTimeController",
+            success: function(){}
+        });
+    }
+    function displayNewMsgsRooms(){
+        //  var chatUrl = window.location.pathname.split("/").pop();
+        $.ajax({
+
+            url: global_var.siteUrl + "room/newpendingMsgs",
+            type: "post",
+            dataType: "json",
+            data: {
+                "chatUrlId" : chatRoomId
+            },
+            success: function(data){
+                if (data.status) {
+                    console.log(data.rooms);
+                    $(".chat-box-rooms").html(data.rooms);
+                }
+            }
+
+        });
+
+    }
    
 });
 

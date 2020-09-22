@@ -25,13 +25,18 @@ class ChatController extends Core\Controller{
            
         }
 
-        public function changeStatus(){
+        // public function changeStatus(){
            
-            $changeStatus =\Models\User::changeUserStatus($_POST['userStatus'], $_SESSION['id']);
+        //     $changeStatus =\Models\User::changeUserStatus($_POST['userStatus'], $_SESSION['id']);
             
-            return $changeStatus;
+        //     return $changeStatus;
             
-        } 
+        // } 
+
+        public function updateUsersTimeController(){
+
+            $update = \Models\User::changeUserDetails($_SESSION['id']);
+        }
 
         public function onlineUsersStatus(){
 

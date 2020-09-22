@@ -170,6 +170,7 @@ li {
   overflow: scroll;
   flex: 1;
   padding-left: .5rem;
+  flex-direction: column;
 }
 
 .container-chat_box #container-chatMessages_box .chatMessages p, .container-chat_box #container-chatMessages_box .chatMessages span {

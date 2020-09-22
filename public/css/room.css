@@ -1,3 +1,6 @@
+.room-container{
+  display: flex;
+}
 .chat-box {
   display: flex;
   flex-direction: column;
@@ -36,7 +39,7 @@
 }
 
 .chat-box ul .current-user {
-  align-self: flex-start;
+  align-self: flex-end;
   margin-bottom: .5rem;
 }
 
@@ -49,7 +52,6 @@
 
 .chat-box ul .other-user {
 
-  align-self: flex-end;
   margin-bottom: .5rem;
   
 }

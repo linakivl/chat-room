@@ -27,6 +27,8 @@
             $changeStatus = \Models\Messages::changePrivateMsgStatus($currentUser,$chatId);
 
         }
+
+
         public function getRecieverUsername($chatId){
 
             $username = \Models\Messages::retrieveUsername($chatId);
@@ -49,7 +51,7 @@
             if (empty($lastMsgRoomId)) $lastMsgRoomId = 0;
 
             $lastPrivateMessage = \Models\Messages::getPrivateLastMessage($_POST['chatUserId'],$_SESSION['id'],$_POST['lastMsgRoomId']);
-            
+           
                 if (!$lastPrivateMessage) {
                     echo json_encode([
                         'status' => false
@@ -73,11 +75,24 @@
                     'lastId' => end($lastPrivateMessage)['privateId']
                 ]);
         }
+        public function newpendingMsgs(){
 
-        public function appendChatsController(){
+            $unopendedChats = \Models\Messages::displayPeddingRooms($_SESSION['id'], $_POST['chatUrlId']);
+           
+            $this->set([
+                'userRoom' => $unopendedChats
+            ]);
+            $this->layout = false;
 
-            $appendChats = \Models\Messages::appendChats($_POST['lastIdMsg']);
-
+            ob_start();
+                $this->render("getNewMessages");
+                $rooms = ob_get_clean(); 
+              
+            echo json_encode([
+                'status' => true,
+                'rooms' => $rooms
+            ]);
         }
+
     }
 ?>

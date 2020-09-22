@@ -14,7 +14,7 @@
         public $userLoginId;
 
         public function __construct($id = false, $username = false){
-
+            
           if($id){
           
             $sql = "SELECT userName FROM users WHERE userId != '{$id}'";
@@ -51,8 +51,8 @@
                             $_SESSION['loginId'] = $details['loginId'];
                             $_SESSION['timelogin'] = $details['loginUserActivity'];
                         }      
-                        $status = 1;
-                        self::changeUserStatus($status, $_SESSION['id']);   
+                        // $status = 1;
+                        // self::changeUserStatus($status, $_SESSION['id']);   
                         
                         return true;
                     }
@@ -161,14 +161,14 @@
             }
         }
        
-        public static function changeUserStatus($status, $userId){
+        // public static function changeUserStatus($status, $userId){
 
-            $sql= "UPDATE login_details SET  status = '{$status}' WHERE loginUserId ='{$userId}'";
-            $userActiveStatus = Db::getInstance()->execute($sql); 
-            if($userActiveStatus){
-                return true;
-            }
-        }
+        //     $sql= "UPDATE login_details SET  status = '{$status}' WHERE loginUserId ='{$userId}'";
+        //     $userActiveStatus = Db::getInstance()->execute($sql); 
+        //     if($userActiveStatus){
+        //         return true;
+        //     }
+        // }
 
         public static function checkTheLogin(){
 
@@ -261,17 +261,19 @@
                 $_SESSION['id'] = $id;
                 $_SESSION['key'] = md5( self::$salt . $id);
                 $_SESSION['loginId'] = $this->userLoginId;
-                $status = 1;
-                self::changeUserStatus($status, $_SESSION['id']);
+                // $status = 1;
+                // self::changeUserStatus($status, $_SESSION['id']);
                 return true;
             }
      
         }
 
+
         public static function getOnlineUsers($currentUser){
-           
-            $sql = "SELECT userId, userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId
-            WHERE login_details.status = 1 AND login_details.loginUserId != '{$currentUser}'";
+
+            $sql = "SELECT userId, userName FROM users INNER JOIN login_details on users.userId = login_details.loginUserId 
+            WHERE loginUserActivity >= NOW() - interval 5 MINUTE_SECOND
+                    AND login_details.loginUserId != '{$currentUser}'"; 
             $onlineUsers = \Models\Db::getInstance()->getResults($sql);
             
             return $onlineUsers;

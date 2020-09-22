@@ -48,38 +48,32 @@
            
             $result = \Models\Db::getInstance()->execute($sql);
             $result = \Models\Db::getInstance()->getLastInsert();
-            var_dump($result);
-            exit();
+            
             return $result;
         }
 
         public static function getPrivateLastMessage($chatUserId, $userId, $lastInsertId){
-
-            if($lastInsertId > 0){
-
-                $sql = "SELECT * FROM private_chat WHERE privateId > $lastInsertId";
-                $result = \Models\Db::getInstance()->getResults($sql);
-
-                return $result;
-                exit();
-            }  
-
-            $sql = "SELECT * FROM private_chat WHERE  toUserId = $chatUserId AND
-            fromUserId = $userId OR toUserId = $userId AND fromUserId = $chatUserId 
+           
+            $sql = "SELECT * 
+            FROM private_chat 
+            WHERE privateId > $lastInsertId 
+            AND(
+                 (toUserId = $userId AND fromUserId = $chatUserId) 
+                OR (toUserId = $chatUserId AND fromUserId = $userId)
+                )
             ORDER BY privateTextTime ASC";
-            
-
-           $result = \Models\Db::getInstance()->getResults($sql);
           
-           $countMessages = count($result);
-        
-            if($countMessages >= 100){
-              
-                $deleteQuery = "DELETE FROM private_chat ORDER BY privateId ASC LIMIT 10";
-                $deleteResult = \Models\Db::getInstance()->execute($deleteQuery);
+            $result = \Models\Db::getInstance()->getResults($sql);
+            
+            $countMessages = count($result);
+            
+                if($countMessages >= 100){
                 
-            }
-           return $result;
+                    $deleteQuery = "DELETE FROM private_chat ORDER BY privateId ASC LIMIT 10";
+                    $deleteResult = \Models\Db::getInstance()->execute($deleteQuery);
+                    
+                }
+            return $result;
         }
 
         public static function getUnreadMsgs($userId){
@@ -104,6 +98,33 @@
                 return $combine;
                 
         }
+        public static function displayPeddingRooms($userId, $chatId){
+          
+            $sql = "SELECT  private_chat.status, private_chat.fromUserId , users.userName 
+            FROM private_chat INNER JOIN users ON private_chat.fromUserId = users.userId
+            WHERE NOT fromUserId = $chatId AND toUserId = $userId AND  status = 1 ";
+            
+            $result = \Models\Db::getInstance()->getResults($sql);
+           
+            $ids = [];
+            $userNames = [];
+            
+                foreach($result as $key => $val){
+
+                    array_push($ids, $val['fromUserId']);
+                    array_push($userNames, $val['userName']);
+                    
+                }
+                $ids = array_unique($ids);
+                $userNames = array_unique($userNames);
+                $combine = array_combine($ids, $userNames);
+                
+                return $combine;
+                
+        }
+
+
+
         public static function changePrivateMsgStatus($currentUser,$chatId){
 
             $sql = "UPDATE private_chat SET status = 0  WHERE fromUserId = $chatId AND toUserId = $currentUser";

@@ -7,34 +7,7 @@ $(document).ready(function(){
     displayUnopenedChats();
 
  
-    $("#logOutBtn").click(function(e){
-        console.log("he");
-        e.preventDefault();
-    
-        var offline = 0;
-        $.ajax({
-            
-            url: global_var.siteUrl + "chat/changeStatus",
-            type: "post",
-            data :{
-                
-                'userStatus' : offline
-            }, 
-            success : function(response){
-
-                $.ajax({
-
-                    url:  global_var.siteUrl + "chat/logoutUser",
-                    success: function(response){
-                        location.reload();
-                    }
-                });
-            }
-
-        });
-    
-    });
-   
+  
     function checkForNewMsg(){        
         $.ajax({
             url: global_var.siteUrl + "chat/checkNewMsg",
@@ -76,6 +49,7 @@ $(document).ready(function(){
         displayOnlineUsers();
         checkForNewMsg();
         displayUnopenedChats();
+        updateUserLoginStatus();
        }, 5000);
 
    
@@ -120,12 +94,50 @@ $(document).ready(function(){
         });
 
     }
+    function updateUserLoginStatus(){
+        
+        $.ajax({
+
+            url: global_var.siteUrl + "chat/updateUsersTimeController",
+            success: function(){
+            }
+        });
+    }
 
     function resetForm(){
 
         document.getElementById("inputText").reset();
 
     }
+    $("#logOutBtn").click(function(e){
+        // console.log("he");
+        // e.preventDefault();
+    
+        // var offline = 0;
+        // $.ajax({
+            
+        //     url: global_var.siteUrl + "chat/changeStatus",
+        //     type: "post",
+        //     data :{
+                
+        //         'userStatus' : offline
+        //     }, 
+        //     success : function(response){
+
+                $.ajax({
+
+                    url:  global_var.siteUrl + "chat/logoutUser",
+                    success: function(response){
+                        location.reload();
+                    }
+                });
+            // }
+
+        // });
+    
+    });
+   
+
 });
 
 
